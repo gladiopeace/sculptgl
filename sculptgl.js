@@ -43,6 +43,7 @@ function SculptGL()
   this.resetSphere_ = this.resetSphere; //load sphere
   this.open_ = this.openFile; //open file button (trigger hidden html input...)
   this.save_ = this.saveFile; //save file function
+  this.exportSketchfab_ = this.exportSketchfab; //upload file on sketchfab
   this.undo_ = this.onUndo; //undo last action
   this.redo_ = this.onRedo; //redo last action
   this.dummyFunc_ = function () {}; //empty function... stupid trick to get a simple button in dat.gui
@@ -235,6 +236,7 @@ SculptGL.prototype = {
     foldFiles.add(this, 'resetSphere_').name('Reset sphere');
     foldFiles.add(this, 'open_').name('Load OBJ file');
     foldFiles.add(this, 'save_').name('Save OBJ file');
+    foldFiles.add(this, 'exportSketchfab_').name('Sketchfab!');
     foldFiles.open();
 
     //Camera fold
@@ -713,6 +715,14 @@ SculptGL.prototype = {
     });
     saveAs(blob, 'yourMesh.obj');
   },
+
+  /** Export to Sketchfab */
+  exportSketchfab: function()
+  {
+    if(!this.mesh_)
+      return;
+    Files.exportSketchfab(mesh_);
+  }
 
   /** When the user undos an action */
   onUndo: function ()

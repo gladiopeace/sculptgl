@@ -98,3 +98,33 @@ Files.exportOBJ = function (mesh)
   }
   return data;
 };
+
+/** Export OBJ file to Sketchfab */
+Files.exportSketchfab = function (mesh)
+{
+  var API_TOKEN='7703915b82994083b7fadf31776c2704';
+  var fd = new FormData();
+
+  fd.append("token", API_TOKEN);
+  var model = Files.exportOBJ(mesh);
+
+  var blob = new Blob([model], { type: "text/plain" });
+  fd.append("fileModel", blob);
+  fd.append("filenameModel","model.obj");
+
+  fd.append("title", "sculptgl model for sketchfab");
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", 'https://api.sketchfab.com/v1/models');
+
+  var result = function(data) {
+    var res = JSON.parse(xhr.responseText);
+    // show user a message?
+    };
+    new_xhr.addEventListener("load", new_result, false);
+    new_xhr.send(new_fd);
+  };
+
+  xhr.addEventListener("load", result, false);
+  xhr.send(fd);
+};
