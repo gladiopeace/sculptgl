@@ -135,7 +135,7 @@ Files.exportSketchfab = function (mesh, color)
     "token" : '7703915b82994083b7fadf31776c2704',
     "fileModel" : blob,
     "filenameModel": "model.zip",
-    "title": "sculptgl model for sketchfab from zip"
+    "title": ""
   }
 
   Sketchfab.showUploader(options);

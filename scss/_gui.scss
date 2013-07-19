@@ -1,7 +1,7 @@
 #gui-container {
   background: $darker;
   font-family: 'Open Sans', sans-serif;
-  padding: 5px 5px 0 5px;
+  padding: 8px 8px 0 8px;
 
   .dg {
     font-family: 'Open Sans', sans-serif;
@@ -10,15 +10,14 @@
       width: auto;
       height: 28px;
       line-height: 28px;
-      background: $dark;
-      border-bottom: 0;
-      border-radius: 4px;
+      background: none;
+      border-bottom: 1px solid $dark;
       font-size: $folderTitles;
       font-weight: 600;
       color: $light;
       text-transform: uppercase;
       margin-left: 0;
-      padding: 0 0 0 10px;
+      padding: 0 0 5px 10px;
       @include prefix(transition, .15s background ease);
 
       &:hover {

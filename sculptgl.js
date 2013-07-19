@@ -232,6 +232,17 @@ SculptGL.prototype = {
     $('#undo').on('click', this.undo_.bind(this));
     $('#redo').on('click', this.redo_.bind(this));
 
+    // Options
+    $('.togglable').on('click', function() {
+      var group = $(this).data('radio');
+      if (group) {
+        $(this).siblings('li[data-radio='+group+']').removeClass('checked');
+        $(this).addClass('checked');
+      } else {
+        $(this).toggleClass('checked');
+      }
+    });
+
     // About
     $('#about').on('click', function() {
       $('#about-popup').show();
