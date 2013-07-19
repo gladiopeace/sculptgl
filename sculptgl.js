@@ -213,15 +213,19 @@ SculptGL.prototype = {
   {
 
     var guiContainer = document.getElementById('gui-container');
-    var guiGeneral = new dat.GUI({ autoPlace: false });
-    // guiGeneral.domElement.style.position = 'absolute';
-    // guiGeneral.domElement.style.height = '500px';
-    this.initGeneralGui(guiGeneral);
-    // guiContainer.appendChild(guiGeneral.domElement);
 
     var guiEditing = new dat.GUI({ autoPlace: false });
     this.initEditingGui(guiEditing);
     guiContainer.appendChild(guiEditing.domElement);
+
+    this.initMenu();
+  },
+
+  /** Initialize the app menu (at the top) */
+  initMenu: function()
+  {
+    $('#reset').on('click', this.resetSphere_.bind(this));
+    $('#export').on('click', this.exportSketchfab_.bind(this));
   },
 
   /** Initialize the general gui (on the left) */
