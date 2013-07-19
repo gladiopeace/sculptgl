@@ -115,7 +115,8 @@ SculptGL.prototype = {
   {
     var attributes = {
       antialias: false,
-      stencil: true
+      stencil: true,
+      preserveDrawingBuffer: true,
     };
     try
     {
@@ -211,92 +212,69 @@ SculptGL.prototype = {
   /** Initialize dat-gui stuffs */
   initGui: function ()
   {
-    var guiGeneral = new dat.GUI();
-    guiGeneral.domElement.style.position = 'absolute';
-    guiGeneral.domElement.style.height = '500px';
-    this.initGeneralGui(guiGeneral);
 
-    var guiEditing = new dat.GUI();
+    var guiContainer = document.getElementById('gui-container');
+    var guiEditing = new dat.GUI({ autoPlace: false });
+
     this.initEditingGui(guiEditing);
+    guiContainer.appendChild(guiEditing.domElement);
+
+    this.initMenu();
   },
 
-  /** Initialize the general gui (on the left) */
-  initGeneralGui: function (gui)
+  /** Initialize the top menu */
+  initMenu: function()
   {
     var self = this;
 
-    //Pen tablet ui stuffs
-    var foldPenTablet = gui.addFolder('Wacom tablet');
-    foldPenTablet.add(this, 'usePenRadius_').name('Pressure radius');
-    foldPenTablet.add(this, 'usePenIntensity_').name('Pressure intensity');
-    foldPenTablet.open();
+    // File
+    $('#load-obj').on('click', this.open_.bind(this));
+    $('#save-obj').on('click', this.save_.bind(this));
 
-    //file fold
-    var foldFiles = gui.addFolder('Files (import/export)');
-    foldFiles.add(this, 'resetSphere_').name('Reset sphere');
-    foldFiles.add(this, 'open_').name('Load OBJ file');
-    foldFiles.add(this, 'save_').name('Save OBJ file');
-    foldFiles.add(this, 'exportSketchfab_').name('Sketchfab!');
-    foldFiles.open();
+    // History
+    $('#undo').on('click', this.undo_.bind(this));
+    $('#redo').on('click', this.redo_.bind(this));
 
-    //Camera fold
-    var cameraFold = gui.addFolder('Camera');
-    var optionsCamera = {
-      'Spherical': Camera.mode.SPHERICAL,
-      'Plane': Camera.mode.PLANE
-    };
-    var ctrlCamera = cameraFold.add(this.camera_, 'mode_', optionsCamera).name('Camera');
-    ctrlCamera.onChange(function (value)
-    {
-      self.camera_.updateMode(parseInt(value, 10));
-      self.render();
+    // Options
+    $('.togglable').on('click', function() {
+      var group = $(this).data('radio');
+      if (group) {
+        $(this).siblings('li[data-radio='+group+']').removeClass('checked');
+        $(this).addClass('checked');
+
+        if (group === 'camera-mode') {
+          self.camera_.updateMode(parseInt($(this).data('value'), 10));
+          self.render();
+        }
+      } else {
+        $(this).toggleClass('checked');
+
+        if ($(this).data('value') === 'radius') {
+          this.usePenRadius_ != this.usePenRadius_;
+        } else if ($(this).data('value') === 'intensity') {
+          this.usePenIntensity_ != this.usePenIntensity_;
+        }
+      }
     });
-    cameraFold.open();
 
-    //history fold
-    var foldHistory = gui.addFolder('History');
-    foldHistory.add(this, 'undo_').name('Undo (Ctrl+Z)');
-    foldHistory.add(this, 'redo_').name('Redo (Ctrl+Y)');
-    foldHistory.open();
+    // About
+    $('#about').on('click', function() {
+      $('#about-popup').addClass('visible');
+    });
+
+    $('#about-popup .cancel').on('click', function() {
+      $('#about-popup').removeClass('visible');
+    });
+
+    // Buttons
+    $('#reset').on('click', this.resetSphere_.bind(this));
+    $('#export').on('click', this.exportSketchfab_.bind(this));
   },
 
   /** Initialize the mesh editing gui (on the right) */
   initEditingGui: function (gui)
   {
     var self = this;
-
-    //mesh fold
-    var foldMesh = gui.addFolder('Mesh');
-    this.ctrlNbVertices_ = foldMesh.add(this, 'dummyFunc_').name('Ver : 0');
-    this.ctrlNbTriangles_ = foldMesh.add(this, 'dummyFunc_').name('Tri : 0');
-    this.ctrlColor_ = foldMesh.addColor(new Render(), 'color_').name('Color');
-    this.ctrlColor_.onChange(function ()
-    {
-      self.render();
-    });
-    var optionsShaders = {
-      'Phong': Render.mode.PHONG,
-      'Wireframe (slow)': Render.mode.WIREFRAME,
-      'Transparency': Render.mode.TRANSPARENCY,
-      'Clay': Render.mode.MATERIAL,
-      'Chavant': Render.mode.MATERIAL + 1,
-      'Skin': Render.mode.MATERIAL + 2,
-      'Drink': Render.mode.MATERIAL + 3,
-      'Red velvet': Render.mode.MATERIAL + 4,
-      'Orange': Render.mode.MATERIAL + 5,
-      'Bronze': Render.mode.MATERIAL + 6
-    };
-    this.ctrlShaders_ = foldMesh.add(new Render(), 'shaderType_', optionsShaders).name('Shader');
-    this.ctrlShaders_.onChange(function (value)
-    {
-      if (self.mesh_)
-      {
-        self.mesh_.render_.updateShaders(parseInt(value, 10), self.textures_, self.shaders_);
-        self.mesh_.updateBuffers();
-        self.render();
-      }
-    });
-    foldMesh.open();
 
     //sculpt fold
     var foldSculpt = gui.addFolder('Sculpt');
@@ -337,6 +315,39 @@ SculptGL.prototype = {
     });
     foldTopo.add(this.sculpt_, 'detail_', 0, 1).name('Detail');
     foldTopo.open();
+
+    //mesh fold
+    var foldMesh = gui.addFolder('Mesh');
+    this.ctrlColor_ = foldMesh.addColor(new Render(), 'color_').name('Color');
+    this.ctrlColor_.onChange(function ()
+    {
+      self.render();
+    });
+    this.ctrlNbVertices_ = foldMesh.add(this, 'dummyFunc_').name('Vertices : 0');
+    this.ctrlNbTriangles_ = foldMesh.add(this, 'dummyFunc_').name('Triangles : 0');
+    // var optionsShaders = {
+    //   'Phong': Render.mode.PHONG,
+    //   'Wireframe (slow)': Render.mode.WIREFRAME,
+    //   'Transparency': Render.mode.TRANSPARENCY,
+    //   'Clay': Render.mode.MATERIAL,
+    //   'Chavant': Render.mode.MATERIAL + 1,
+    //   'Skin': Render.mode.MATERIAL + 2,
+    //   'Drink': Render.mode.MATERIAL + 3,
+    //   'Red velvet': Render.mode.MATERIAL + 4,
+    //   'Orange': Render.mode.MATERIAL + 5,
+    //   'Bronze': Render.mode.MATERIAL + 6
+    // };
+    // this.ctrlShaders_ = foldMesh.add(new Render(), 'shaderType_', optionsShaders).name('Shader');
+    // this.ctrlShaders_.onChange(function (value)
+    // {
+    //   if (self.mesh_)
+    //   {
+    //     self.mesh_.render_.updateShaders(parseInt(value, 10), self.textures_, self.shaders_);
+    //     self.mesh_.updateBuffers();
+    //     self.render();
+    //   }
+    // });
+    foldMesh.open();
   },
 
   /** Render mesh */
@@ -370,7 +381,7 @@ SculptGL.prototype = {
   onKeyDown: function (event)
   {
     event.stopPropagation();
-    //event.preventDefault();
+    event.preventDefault();
     var key = event.which;
     if (event.ctrlKey && key === 90) //z key
     {
@@ -546,8 +557,8 @@ SculptGL.prototype = {
         }
       }
       this.mesh_.updateBuffers();
-      this.ctrlNbVertices_.name('Ver : ' + this.mesh_.vertices_.length);
-      this.ctrlNbTriangles_.name('Tri : ' + this.mesh_.triangles_.length);
+      this.ctrlNbVertices_.name('Vertices : ' + this.mesh_.vertices_.length);
+      this.ctrlNbTriangles_.name('Triangles : ' + this.mesh_.triangles_.length);
     }
     else if (this.mouseButton_ === 3)
       this.camera_.rotate(mouseX, mouseY);
@@ -691,10 +702,10 @@ SculptGL.prototype = {
     var mesh = this.mesh_;
     this.ctrlColor_.object = mesh.render_;
     this.ctrlColor_.updateDisplay();
-    this.ctrlShaders_.object = mesh.render_;
-    this.ctrlShaders_.updateDisplay();
-    this.ctrlNbVertices_.name('Ver : ' + mesh.vertices_.length);
-    this.ctrlNbTriangles_.name('Tri : ' + mesh.triangles_.length);
+    // this.ctrlShaders_.object = mesh.render_;
+    // this.ctrlShaders_.updateDisplay();
+    this.ctrlNbVertices_.name('Vertices : ' + mesh.vertices_.length);
+    this.ctrlNbTriangles_.name('Triangles : ' + mesh.triangles_.length);
   },
 
   /** Open file */
@@ -722,6 +733,11 @@ SculptGL.prototype = {
     if(!this.mesh_)
       return;
     Files.exportSketchfab(this.mesh_, this.ctrlColor_.__color.__state);
+
+    // Prevent shortcut keys from triggering in Sketchfab export
+    $('.skfb-uploader').on('keydown', function(e) {
+      e.stopPropagation();
+    });
   },
 
   /** When the user undos an action */

@@ -1,0 +1,17 @@
+$blue: #1caad9;
+$red: #f04f4f;
+$darker: #222;
+$dark: #444;
+$light: #999;
+$lighter: #ccc;
+$text: #ececec;
+$select: #333;
+$slider: $select;
+$folderTitles: 14px;
+
+@import 'mixins';
+@import 'layout';
+@import 'topbar';
+@import 'gui';
+@import 'uploader';
+@import 'modals';

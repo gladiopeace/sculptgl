@@ -1,0 +1,125 @@
+.skfb-uploader,
+.modal {
+  position: relative;
+  border-radius: 4px;
+  font-family: 'Open Sans', sans-serif;
+
+  h1 {
+    font-weight: normal;
+    padding: 0;
+    margin: 0;
+    color: $text;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 30px;
+    padding-top: 5px;
+  }
+
+  label {
+    color: #999;
+    font-size: 14px;
+    text-transform: uppercase;
+    padding-bottom: 10px;
+    display: block;
+  }
+
+  & > div {
+    font-size: 17px;
+  }
+
+  & > div + div {
+    margin-top: 30px;
+  }
+
+  input[type="text"],
+  textarea {
+    background: #444;
+    display: block;
+    padding: 20px;
+    border-radius: 4px;
+    border: 0;
+    width: 100%;
+    color: #fff;
+    @include prefix(box-sizing, border-box);
+    font-size: 17px;
+
+    &:focus {
+      background: lighten(#444, 20%);
+      outline: 0;
+    }
+  }
+
+  textarea {
+    height: 143px;
+  }
+
+  .btn {
+    width: 100%;
+    background: $blue;
+    padding: 0 20px;
+    line-height: 60px;
+    margin-top: 30px;
+    @include prefix(box-sizing, border-box);
+    color: #fff;
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 2px;
+    @include prefix(transition, .15s background ease);
+
+    &:hover {
+      background: darken($blue, 5%);
+    }
+
+    .spinner {
+      display: inline-block;
+      background: url('/ressources/spinner.gif');
+      height: 24px;
+      width: 24px;
+      position: relative;
+      top: 5px;
+      margin-right: 5px;
+    }
+
+    &.uploading {
+      @include prefix(transition, none);
+    }
+
+    &.uploading:hover {
+      background: $blue;
+    }
+  }
+
+  .cancel {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #777;
+    text-decoration: none;
+    border: 2px solid #777;
+    border-radius: 40px;
+    width: 20px;
+    height: 20px;
+    display: block;
+    line-height: 19px;
+    text-align: center;
+
+    &:hover {
+      color: #999;
+      border-color: #999;
+    }
+  }
+
+  p.success {
+    color: $text;
+  }
+
+  input[readonly] {
+    background: none;
+    border: 1px solid $dark;
+
+    &:focus {
+      background: none;
+    }
+  }
+}

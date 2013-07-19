@@ -21,3 +21,11 @@ html, body{
   position: absolute;
   top: -1000px;
 }
+
+#gui-container {
+  width: 245px;
+  position: fixed;
+  top: 90px;
+  right: 30px;
+  border-radius: 4px;
+}
