@@ -1,0 +1,16 @@
+/* Mixins */
+
+@mixin gradient($argument) {
+  background: -webkit-#{$argument};
+  background: -moz-#{$argument};
+  background: -ms-#{$argument};
+  background: -o-#{$argument};
+}
+
+@mixin prefix($name, $argument) {
+  -webkit-#{$name}: $argument;
+  -ms-#{$name}: $argument;
+  -moz-#{$name}: $argument;
+  -o-#{$name}: $argument;
+  #{$name}: $argument;
+}

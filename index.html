@@ -36,6 +36,36 @@ Stéphane GINIER
   <canvas id='canvas'></canvas>
 
   <!-- HUD -->
+  <div id="topbar">
+    <div class="logo">
+      <img src="/ressources/logo.png">
+    </div>
+    <div class="main-menu">
+      <ul>
+        <li>File
+          <ul class="sub-menu">
+            <li>Load .obj</li>
+            <li>Save .obj</li>
+          </ul>
+        </li>
+        <li>Options
+          <ul class="sub-menu">
+            <li class="group-title">Camera</li>
+            <li>Spherical</li>
+            <li>Plane</li>
+            <li class="group-title">Wacom Tablet</li>
+            <li>Pressure radius</li>
+            <li>Pressure</li>
+          </ul>
+        </li>
+        <li>About</li>
+      </ul>
+    </div>
+    <div class="main-actions">
+      <div class="reset"><i class="icon-refresh">Reset sphere</i></div>
+      <div class="export-button"><i class="icon-cloud-upload">Export to Sketchfab</i></div>
+    </div>
+  </div>
   <div id="gui-container"></div>
 
   <!-- wacom tablet plugin -->

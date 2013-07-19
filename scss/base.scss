@@ -1,2 +1,11 @@
+$darker: #222;
+$dark: #333;
+$light: #999;
+$lighter: #ccc;
+$text: #ececec;
+$folderTitles: 14px;
+
+@import 'mixins';
 @import 'layout';
+@import 'topbar';
 @import 'gui';

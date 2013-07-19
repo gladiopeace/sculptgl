@@ -1,3 +1,4 @@
+/* Mixins */
 * {
   margin: 0;
   padding: 0; }
@@ -24,9 +25,81 @@ html, body {
 #gui-container {
   width: 245px;
   position: fixed;
-  top: 40px;
-  right: 40px;
+  top: 90px;
+  right: 30px;
   border-radius: 4px; }
+
+#topbar {
+  background: #222222;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  font-family: 'Open Sans', sans-serif;
+  padding: 0 30px;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box; }
+
+.logo,
+.main-menu {
+  float: left; }
+
+.logo {
+  margin-top: 15px;
+  margin-right: 20px; }
+
+.main-menu {
+  color: #ececec; }
+  .main-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0; }
+  .main-menu ul > li {
+    float: left;
+    line-height: 60px;
+    margin-left: 20px;
+    position: relative; }
+    .main-menu ul > li:hover > ul {
+      display: block; }
+  .main-menu ul > li > ul {
+    position: absolute;
+    top: 50px;
+    left: -10px;
+    background: #222222;
+    width: 200px;
+    padding: 5px;
+    border-radius: 0 4px 4px 0;
+    display: none; }
+  .main-menu ul > li > ul > li {
+    float: none;
+    display: block;
+    font-size: 14px;
+    line-height: 30px;
+    margin-left: 0;
+    padding-left: 10px; }
+  .main-menu li.group-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #999999;
+    text-transform: uppercase;
+    background: #333333;
+    padding-left: 10px;
+    margin: 5px 0 10px 0; }
+
+.main-actions {
+  float: right;
+  color: #ececec; }
+
+.reset,
+.export-button {
+  float: left; }
+  .reset i,
+  .export-button i {
+    margin-right: 10px; }
 
 #gui-container {
   background: #222222;
