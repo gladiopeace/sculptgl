@@ -209,8 +209,12 @@ html, body {
     #gui-container .dg .folder + .folder {
       margin-top: 10px; }
     #gui-container .dg select {
-      background: #333333;
+      background: #333333 url("/ressources/select-icon.png") no-repeat 120px center;
       -webkit-appearance: none;
+      -ms-appearance: none;
+      -moz-appearance: none;
+      -o-appearance: none;
+      appearance: none;
       color: #999999;
       border: 0;
       display: block;
@@ -222,14 +226,12 @@ html, body {
       margin-top: 0;
       padding-left: 10px;
       font-size: 14px;
-      position: relative; }
-      #gui-container .dg select:after {
-        content: '\f0c9';
-        font-family: 'FontAwesome';
-        position: absolute;
-        top: 0;
-        right: 0;
-        color: #fff; }
+      position: relative;
+      cursor: pointer; }
+      #gui-container .dg select:hover {
+        background-color: #404040; }
+      #gui-container .dg select:active, #gui-container .dg select:focus {
+        outline: 0; }
   #gui-container .c input[type="text"] {
     padding: 0;
     line-height: 20px; }

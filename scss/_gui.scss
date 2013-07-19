@@ -74,8 +74,8 @@
     }
 
     select {
-      background: $select;
-      -webkit-appearance: none;
+      background: $select url('/ressources/select-icon.png') no-repeat 120px center;
+      @include prefix(appearance, none);
       color: $light;
       border: 0;
       display: block;
@@ -88,14 +88,15 @@
       padding-left: 10px;
       font-size: 14px;
       position: relative;
+      cursor: pointer;
 
-      &:after {
-        content: '\f0c9';
-        font-family: 'FontAwesome';
-        position: absolute;
-        top: 0;
-        right: 0;
-        color: #fff;
+      &:hover {
+        background-color: lighten($select, 5%);
+      }
+
+      &:active,
+      &:focus {
+        outline: 0;
       }
     }
   }
