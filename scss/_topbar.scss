@@ -32,23 +32,33 @@
   ul > li {
     float: left;
     line-height: 60px;
-    margin-left: 20px;
+    padding-left: 30px;
     position: relative;
+    cursor: pointer;
+
+    &:hover {
+      color: $blue;
+    }
 
     &:hover > ul {
       display: block;
+      color: $text;
+      opacity: 1;
+      pointer-events: auto;
     }
   }
 
   ul > li > ul {
     position: absolute;
     top: 50px;
-    left: -10px;
+    left: 20px;
     background: $darker;
     width: 200px;
-    padding: 5px;
+    padding: 8px;
     border-radius: 0 4px 4px 0;
-    display: none;
+    pointer-events: none;
+    opacity: 0;
+    @include prefix(transition, .15s opacity ease);
   }
 
   ul > li > ul > li {
@@ -68,6 +78,10 @@
     background: $dark;
     padding-left: 10px;
     margin: 5px 0 10px 0;
+
+    &:hover {
+      color: $light;
+    }
   }
 }
 
@@ -79,8 +93,27 @@
 .reset,
 .export-button {
   float: left;
+  line-height: 40px;
+  margin-top: 10px;
+  cursor: pointer;
 
   i {
     margin-right: 10px;
   }
+}
+
+.export-button {
+  background: $blue;
+  border-radius: 4px;
+  padding: 0 20px;
+  margin-left: 40px;
+  @include prefix(transition, .15s background ease);
+
+  &:hover {
+    background: darken($blue, 5%);
+  }
+}
+
+.reset:hover {
+  color: $blue;
 }

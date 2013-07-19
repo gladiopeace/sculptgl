@@ -1,8 +1,11 @@
+$blue: #1caad9;
 $darker: #222;
-$dark: #333;
+$dark: #444;
 $light: #999;
 $lighter: #ccc;
 $text: #ececec;
+$select: #333;
+$slider: $select;
 $folderTitles: 14px;
 
 @import 'mixins';
