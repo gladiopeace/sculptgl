@@ -138,6 +138,5 @@ Files.exportSketchfab = function (mesh, color)
     "title": "sculptgl model for sketchfab from zip"
   }
 
-  Sketchfab.upload(options, function(err, data) {alert("success");});
-
+  Sketchfab.showUploader(options);
 };

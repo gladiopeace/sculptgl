@@ -370,7 +370,7 @@ SculptGL.prototype = {
   onKeyDown: function (event)
   {
     event.stopPropagation();
-    event.preventDefault();
+    //event.preventDefault();
     var key = event.which;
     if (event.ctrlKey && key === 90) //z key
     {
