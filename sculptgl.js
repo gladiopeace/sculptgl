@@ -213,15 +213,15 @@ SculptGL.prototype = {
   {
 
     var guiContainer = document.getElementById('gui-container');
-
     var guiEditing = new dat.GUI({ autoPlace: false });
+
     this.initEditingGui(guiEditing);
     guiContainer.appendChild(guiEditing.domElement);
 
     this.initMenu();
   },
 
-  /** Initialize the app menu (at the top) */
+  /** Initialize the top menu */
   initMenu: function()
   {
     var self = this;
@@ -268,46 +268,6 @@ SculptGL.prototype = {
     // Buttons
     $('#reset').on('click', this.resetSphere_.bind(this));
     $('#export').on('click', this.exportSketchfab_.bind(this));
-  },
-
-  /** Initialize the general gui (on the left) */
-  initGeneralGui: function (gui)
-  {
-    var self = this;
-
-    //Pen tablet ui stuffs
-    var foldPenTablet = gui.addFolder('Wacom tablet');
-    foldPenTablet.add(this, 'usePenRadius_').name('Pressure radius');
-    foldPenTablet.add(this, 'usePenIntensity_').name('Pressure intensity');
-    foldPenTablet.open();
-
-    //file fold
-    var foldFiles = gui.addFolder('Files (import/export)');
-    foldFiles.add(this, 'resetSphere_').name('Reset sphere');
-    foldFiles.add(this, 'open_').name('Load OBJ file');
-    foldFiles.add(this, 'save_').name('Save OBJ file');
-    foldFiles.add(this, 'exportSketchfab_').name('Sketchfab!');
-    foldFiles.open();
-
-    //Camera fold
-    var cameraFold = gui.addFolder('Camera');
-    var optionsCamera = {
-      'Spherical': Camera.mode.SPHERICAL,
-      'Plane': Camera.mode.PLANE
-    };
-    var ctrlCamera = cameraFold.add(this.camera_, 'mode_', optionsCamera).name('Camera');
-    ctrlCamera.onChange(function (value)
-    {
-      self.camera_.updateMode(parseInt(value, 10));
-      self.render();
-    });
-    cameraFold.open();
-
-    //history fold
-    var foldHistory = gui.addFolder('History');
-    foldHistory.add(this, 'undo_').name('Undo (Ctrl+Z)');
-    foldHistory.add(this, 'redo_').name('Redo (Ctrl+Y)');
-    foldHistory.open();
   },
 
   /** Initialize the mesh editing gui (on the right) */
@@ -420,7 +380,7 @@ SculptGL.prototype = {
   onKeyDown: function (event)
   {
     event.stopPropagation();
-    //event.preventDefault();
+    event.preventDefault();
     var key = event.which;
     if (event.ctrlKey && key === 90) //z key
     {
@@ -497,7 +457,7 @@ SculptGL.prototype = {
   onKeyUp: function (event)
   {
     event.stopPropagation();
-    // event.preventDefault();
+    event.preventDefault();
     var key = event.which;
     switch (key)
     {
@@ -772,6 +732,11 @@ SculptGL.prototype = {
     if(!this.mesh_)
       return;
     Files.exportSketchfab(this.mesh_, this.ctrlColor_.__color.__state);
+
+    // Prevent shortcut keys from triggering in Sketchfab export
+    $('.skfb-uploader').on('keydown', function(e) {
+      e.stopPropagation();
+    });
   },
 
   /** When the user undos an action */
