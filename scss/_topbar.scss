@@ -36,6 +36,13 @@
     position: relative;
     cursor: pointer;
 
+    .shortcut {
+      float: right;
+      color: $light;
+      font-size: 12px;
+      margin-right: 10px;
+    }
+
     &:hover {
       color: $blue;
     }

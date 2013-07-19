@@ -224,6 +224,15 @@ SculptGL.prototype = {
   /** Initialize the app menu (at the top) */
   initMenu: function()
   {
+    // File
+    $('#load-obj').on('click', this.open_.bind(this));
+    $('#save-obj').on('click', this.save_.bind(this));
+
+    // History
+    $('#undo').on('click', this.undo_.bind(this));
+    $('#redo').on('click', this.redo_.bind(this));
+
+    // Buttons
     $('#reset').on('click', this.resetSphere_.bind(this));
     $('#export').on('click', this.exportSketchfab_.bind(this));
   },

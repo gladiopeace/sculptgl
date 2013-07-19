@@ -64,6 +64,11 @@ html, body {
     padding-left: 30px;
     position: relative;
     cursor: pointer; }
+    .main-menu ul > li .shortcut {
+      float: right;
+      color: #999999;
+      font-size: 12px;
+      margin-right: 10px; }
     .main-menu ul > li:hover {
       color: #1caad9; }
     .main-menu ul > li:hover > ul {
