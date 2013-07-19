@@ -245,7 +245,11 @@ SculptGL.prototype = {
 
     // About
     $('#about').on('click', function() {
-      $('#about-popup').show();
+      $('#about-popup').addClass('visible');
+    });
+
+    $('#about-popup .cancel').on('click', function() {
+      $('#about-popup').removeClass('visible');
     });
 
     // Buttons

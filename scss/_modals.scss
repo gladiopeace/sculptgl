@@ -1,0 +1,45 @@
+.modal {
+  opacity: 0;
+  @include prefix(transform, scale(0.9));
+  @include prefix(transition, .2s all ease);
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 15px 30px;
+  background-color: #222;
+  color: $text;
+
+  &.visible {
+    pointer-events: auto;
+    opacity: 1;
+    @include prefix(transform, scale(1));
+  }
+
+  p a {
+    color: $blue;
+    text-decoration: none;
+  }
+
+  .cancel {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+#about-popup {
+  width: 440px;
+  height: 300px;
+  margin-left: -235px;
+  margin-top: -165px;
+}
+
+#about-popup p {
+  font-size: 15px;
+  line-height: 24px;
+}
+
+#about-popup > p + p {
+  margin-top: 30px;
+}
