@@ -75,10 +75,11 @@ html, body {
       display: block;
       color: #ececec;
       opacity: 1;
-      pointer-events: auto; }
+      pointer-events: auto;
+      top: 50px; }
   .main-menu ul > li > ul {
     position: absolute;
-    top: 50px;
+    top: 40px;
     left: 10px;
     background: #222222;
     width: 160px;
@@ -86,11 +87,11 @@ html, body {
     border-radius: 0 4px 4px 0;
     pointer-events: none;
     opacity: 0;
-    -webkit-transition: 0.15s opacity ease;
-    -ms-transition: 0.15s opacity ease;
-    -moz-transition: 0.15s opacity ease;
-    -o-transition: 0.15s opacity ease;
-    transition: 0.15s opacity ease; }
+    -webkit-transition: 0.15s all ease;
+    -ms-transition: 0.15s all ease;
+    -moz-transition: 0.15s all ease;
+    -o-transition: 0.15s all ease;
+    transition: 0.15s all ease; }
   .main-menu ul > li > ul > li {
     float: none;
     display: block;

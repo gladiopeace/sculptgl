@@ -52,12 +52,13 @@
       color: $text;
       opacity: 1;
       pointer-events: auto;
+      top: 50px;
     }
   }
 
   ul > li > ul {
     position: absolute;
-    top: 50px;
+    top: 40px;
     left: 10px;
     background: $darker;
     width: 160px;
@@ -65,7 +66,7 @@
     border-radius: 0 4px 4px 0;
     pointer-events: none;
     opacity: 0;
-    @include prefix(transition, .15s opacity ease);
+    @include prefix(transition, .15s all ease);
   }
 
   ul > li > ul > li {
