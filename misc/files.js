@@ -102,32 +102,20 @@ Files.exportOBJ = function (mesh)
 /** Export OBJ file to Sketchfab */
 Files.exportSketchfab = function (mesh)
 {
-  var API_TOKEN='7703915b82994083b7fadf31776c2704';
-  var fd = new FormData();
-
-  fd.append("token", API_TOKEN);
 
   // create a zip containing the .obj model
   var model = Files.exportOBJ(mesh);
   var zip = new JSZip();
   zip.file("model.obj", model);
   var blob = zip.generate({type:"blob", compression:"DEFLATE"});
-  fd.append("fileModel", blob);
-  fd.append("filenameModel","model.zip");
 
-  fd.append("title", "sculptgl model for sketchfab from zip");
+  var options = {
+    "token" : '7703915b82994083b7fadf31776c2704',
+    "fileModel" : blob,
+    "filenameModel": "model.zip",
+    "title": "sculptgl model for sketchfab from zip"
+  }
 
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", 'https://api.sketchfab.com/v1/models');
-
-  var result = function(data) {
-    var res = JSON.parse(xhr.responseText);
-    // show user a message?
-    new_xhr.addEventListener("load", new_result, false);
-    new_xhr.send(new_fd);
-  };
-
-  xhr.addEventListener("load", result, false);
-  xhr.send(fd);
+  Sketchfab.upload(options, function(err, data) {alert("success");});
 
 };
