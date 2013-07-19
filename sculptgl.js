@@ -324,13 +324,13 @@ SculptGL.prototype = {
 
     //mesh fold
     var foldMesh = gui.addFolder('Mesh');
-    this.ctrlNbVertices_ = foldMesh.add(this, 'dummyFunc_').name('Ver : 0');
-    this.ctrlNbTriangles_ = foldMesh.add(this, 'dummyFunc_').name('Tri : 0');
     this.ctrlColor_ = foldMesh.addColor(new Render(), 'color_').name('Color');
     this.ctrlColor_.onChange(function ()
     {
       self.render();
     });
+    this.ctrlNbVertices_ = foldMesh.add(this, 'dummyFunc_').name('Vertices : 0');
+    this.ctrlNbTriangles_ = foldMesh.add(this, 'dummyFunc_').name('Triangles : 0');
     // var optionsShaders = {
     //   'Phong': Render.mode.PHONG,
     //   'Wireframe (slow)': Render.mode.WIREFRAME,
@@ -563,8 +563,8 @@ SculptGL.prototype = {
         }
       }
       this.mesh_.updateBuffers();
-      this.ctrlNbVertices_.name('Ver : ' + this.mesh_.vertices_.length);
-      this.ctrlNbTriangles_.name('Tri : ' + this.mesh_.triangles_.length);
+      this.ctrlNbVertices_.name('Vertices : ' + this.mesh_.vertices_.length);
+      this.ctrlNbTriangles_.name('Triangles : ' + this.mesh_.triangles_.length);
     }
     else if (this.mouseButton_ === 3)
       this.camera_.rotate(mouseX, mouseY);
@@ -710,8 +710,8 @@ SculptGL.prototype = {
     this.ctrlColor_.updateDisplay();
     // this.ctrlShaders_.object = mesh.render_;
     // this.ctrlShaders_.updateDisplay();
-    this.ctrlNbVertices_.name('Ver : ' + mesh.vertices_.length);
-    this.ctrlNbTriangles_.name('Tri : ' + mesh.triangles_.length);
+    this.ctrlNbVertices_.name('Vertices : ' + mesh.vertices_.length);
+    this.ctrlNbTriangles_.name('Triangles : ' + mesh.triangles_.length);
   },
 
   /** Open file */
