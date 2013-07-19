@@ -106,13 +106,16 @@ Files.exportSketchfab = function (mesh)
   var fd = new FormData();
 
   fd.append("token", API_TOKEN);
+
+  // create a zip containing the .obj model
   var model = Files.exportOBJ(mesh);
-
-  var blob = new Blob([model], { type: "text/plain" });
+  var zip = new JSZip();
+  zip.file("model.obj", model);
+  var blob = zip.generate({type:"blob"});
   fd.append("fileModel", blob);
-  fd.append("filenameModel","model.obj");
+  fd.append("filenameModel","model.zip");
 
-  fd.append("title", "sculptgl model for sketchfab");
+  fd.append("title", "sculptgl model for sketchfab from zip");
 
   var xhr = new XMLHttpRequest();
   xhr.open("POST", 'https://api.sketchfab.com/v1/models');
@@ -126,4 +129,5 @@ Files.exportSketchfab = function (mesh)
 
   xhr.addEventListener("load", result, false);
   xhr.send(fd);
+
 };
