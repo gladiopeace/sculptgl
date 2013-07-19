@@ -111,7 +111,7 @@ Files.exportSketchfab = function (mesh)
   var model = Files.exportOBJ(mesh);
   var zip = new JSZip();
   zip.file("model.obj", model);
-  var blob = zip.generate({type:"blob"});
+  var blob = zip.generate({type:"blob", compression:"DEFLATE"});
   fd.append("fileModel", blob);
   fd.append("filenameModel","model.zip");
 
