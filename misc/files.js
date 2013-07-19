@@ -120,7 +120,6 @@ Files.exportSketchfab = function (mesh)
   var result = function(data) {
     var res = JSON.parse(xhr.responseText);
     // show user a message?
-    };
     new_xhr.addEventListener("load", new_result, false);
     new_xhr.send(new_fd);
   };

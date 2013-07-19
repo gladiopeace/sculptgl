@@ -722,7 +722,7 @@ SculptGL.prototype = {
     if(!this.mesh_)
       return;
     Files.exportSketchfab(mesh_);
-  }
+  },
 
   /** When the user undos an action */
   onUndo: function ()
