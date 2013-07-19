@@ -374,7 +374,7 @@ SculptGL.prototype = {
   onKeyDown: function (event)
   {
     event.stopPropagation();
-    // event.preventDefault();
+    //event.preventDefault();
     var key = event.which;
     if (event.ctrlKey && key === 90) //z key
     {
@@ -725,7 +725,7 @@ SculptGL.prototype = {
   {
     if(!this.mesh_)
       return;
-    Files.exportSketchfab(mesh_);
+    Files.exportSketchfab(this.mesh_, this.ctrlColor_.__color.__state);
   },
 
   /** When the user undos an action */

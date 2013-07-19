@@ -77,11 +77,17 @@ Files.loadOBJ = function (data, mesh)
 };
 
 /** Save OBJ file */
-Files.exportOBJ = function (mesh)
+Files.exportOBJ = function (mesh, mtl_name)
 {
   var vAr = mesh.vertexArray_;
   var iAr = mesh.indexArray_;
   var data = 's 0\n';
+
+  if(mtl_name)
+  {
+    data += 'mtllib '+mtl_name+'.mtl\n'
+    data += 'usemtl '+mtl_name+'\n'
+  }
   var nbVertices = mesh.vertices_.length;
   var nbTriangles = mesh.triangles_.length;
   var i = 0,
@@ -99,31 +105,38 @@ Files.exportOBJ = function (mesh)
   return data;
 };
 
-/** Export OBJ file to Sketchfab */
-Files.exportSketchfab = function (mesh)
+Files.exportColorMtl = function (color)
 {
-  var API_TOKEN='7703915b82994083b7fadf31776c2704';
-  var fd = new FormData();
+  var data = 'newmtl color\n';
+  var r = color.r / 255.0;
+  var g = color.g / 255.0;
+  var b = color.b / 255.0;
+  data += 'Ka '+ r * 0.1 + ' ' + g * 0.1 + ' ' + b * 0.1 + '\n';
+  data += 'Kd '+ r + ' ' + g + ' ' + b + '\n';
+  data += 'Ks 1.0 1.0 1.0\n';
+  data += 'Ns 200.0\n';
+  data += 'd 1.0\n'; // no transparency
+  return data;
+}
 
-  fd.append("token", API_TOKEN);
-  var model = Files.exportOBJ(mesh);
+/** Export OBJ file to Sketchfab */
+Files.exportSketchfab = function (mesh, color)
+{
 
-  var blob = new Blob([model], { type: "text/plain" });
-  fd.append("fileModel", blob);
-  fd.append("filenameModel","model.obj");
+  // create a zip containing the .obj model
+  var model = Files.exportOBJ(mesh, "color");
+  var mtl = Files.exportColorMtl(color);
+  var zip = new JSZip();
+  zip.file("model.obj", model);
+  zip.file("color.mtl", mtl);
+  var blob = zip.generate({type:"blob", compression:"DEFLATE"});
 
-  fd.append("title", "sculptgl model for sketchfab");
+  var options = {
+    "token" : '7703915b82994083b7fadf31776c2704',
+    "fileModel" : blob,
+    "filenameModel": "model.zip",
+    "title": "sculptgl model for sketchfab from zip"
+  }
 
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", 'https://api.sketchfab.com/v1/models');
-
-  var result = function(data) {
-    var res = JSON.parse(xhr.responseText);
-    // show user a message?
-    new_xhr.addEventListener("load", new_result, false);
-    new_xhr.send(new_fd);
-  };
-
-  xhr.addEventListener("load", result, false);
-  xhr.send(fd);
+  Sketchfab.showUploader(options);
 };
