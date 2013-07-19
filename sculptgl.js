@@ -115,7 +115,8 @@ SculptGL.prototype = {
   {
     var attributes = {
       antialias: false,
-      stencil: true
+      stencil: true,
+      preserveDrawingBuffer: true,
     };
     try
     {
