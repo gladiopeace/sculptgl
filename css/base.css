@@ -1,0 +1,111 @@
+* {
+  margin: 0;
+  padding: 0; }
+
+html, body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: Helvetica, Arial, sans-serif; }
+
+#canvas {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  display: block; }
+
+#tablet-plugin {
+  position: absolute;
+  top: -1000px; }
+
+#gui-container {
+  width: 245px;
+  position: fixed;
+  top: 40px;
+  right: 40px;
+  border-radius: 4px; }
+
+#gui-container {
+  background: #222222;
+  font-family: 'Open Sans', sans-serif;
+  padding: 5px 5px 0 5px; }
+  #gui-container .dg {
+    font-family: 'Open Sans', sans-serif; }
+    #gui-container .dg li.title {
+      width: auto;
+      height: 28px;
+      line-height: 28px;
+      background: #333333;
+      border-bottom: 0;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #999999;
+      text-transform: uppercase;
+      margin-left: 0;
+      padding: 0 0 0 10px;
+      -webkit-transition: .15s background ease;
+      -moz-transition: .15s background ease;
+      -ms-transition: .15s background ease;
+      -o-transition: .15s background ease;
+      transition: .15s background ease; }
+      #gui-container .dg li.title:hover {
+        background: #404040; }
+    #gui-container .dg li {
+      border-bottom: 0;
+      padding-left: 0; }
+    #gui-container .dg li:not(.title) {
+      background: transparent !important;
+      font-size: 12px !important;
+      line-height: 31px; }
+    #gui-container .dg .dg ul > li:not(.title) {
+      padding-left: 10px;
+      margin: 10px 0; }
+    #gui-container .dg .folder {
+      border-left: 0; }
+      #gui-container .dg .folder li {
+        border-left: 0; }
+    #gui-container .dg .slider {
+      margin-left: 0px;
+      width: 90px;
+      border-radius: 2px;
+      margin-top: 0;
+      overflow: hidden;
+      height: 20px; }
+    #gui-container .dg .dg .has-slider input[type=text] {
+      width: 42px;
+      border-radius: 2px;
+      color: #cccccc;
+      margin-top: 0;
+      text-align: center;
+      line-height: 20px; }
+    #gui-container .dg .folder + .folder {
+      margin-top: 10px; }
+    #gui-container .dg select {
+      background: #333333;
+      -webkit-appearance: none;
+      color: #999999;
+      border: 0;
+      display: block;
+      width: 142px;
+      border-radius: 2px;
+      height: 28px;
+      line-height: 28px;
+      padding-top: 0;
+      margin-top: 0;
+      padding-left: 10px;
+      font-size: 14px;
+      position: relative; }
+      #gui-container .dg select:after {
+        content: '\f0c9';
+        font-family: 'FontAwesome';
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: #fff; }
+  #gui-container .c input[type="text"] {
+    padding: 0;
+    line-height: 20px; }

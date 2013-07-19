@@ -211,13 +211,17 @@ SculptGL.prototype = {
   /** Initialize dat-gui stuffs */
   initGui: function ()
   {
-    var guiGeneral = new dat.GUI();
-    guiGeneral.domElement.style.position = 'absolute';
-    guiGeneral.domElement.style.height = '500px';
-    this.initGeneralGui(guiGeneral);
 
-    var guiEditing = new dat.GUI();
+    var guiContainer = document.getElementById('gui-container');
+    var guiGeneral = new dat.GUI({ autoPlace: false });
+    // guiGeneral.domElement.style.position = 'absolute';
+    // guiGeneral.domElement.style.height = '500px';
+    this.initGeneralGui(guiGeneral);
+    // guiContainer.appendChild(guiGeneral.domElement);
+
+    var guiEditing = new dat.GUI({ autoPlace: false });
     this.initEditingGui(guiEditing);
+    guiContainer.appendChild(guiEditing.domElement);
   },
 
   /** Initialize the general gui (on the left) */
@@ -370,7 +374,7 @@ SculptGL.prototype = {
   onKeyDown: function (event)
   {
     event.stopPropagation();
-    event.preventDefault();
+    // event.preventDefault();
     var key = event.which;
     if (event.ctrlKey && key === 90) //z key
     {
@@ -447,7 +451,7 @@ SculptGL.prototype = {
   onKeyUp: function (event)
   {
     event.stopPropagation();
-    event.preventDefault();
+    // event.preventDefault();
     var key = event.which;
     switch (key)
     {
