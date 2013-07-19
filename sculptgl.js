@@ -721,7 +721,7 @@ SculptGL.prototype = {
   {
     if(!this.mesh_)
       return;
-    Files.exportSketchfab(this.mesh_);
+    Files.exportSketchfab(this.mesh_, this.ctrlColor_.__color.__state);
   },
 
   /** When the user undos an action */

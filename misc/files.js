@@ -77,11 +77,17 @@ Files.loadOBJ = function (data, mesh)
 };
 
 /** Save OBJ file */
-Files.exportOBJ = function (mesh)
+Files.exportOBJ = function (mesh, mtl_name)
 {
   var vAr = mesh.vertexArray_;
   var iAr = mesh.indexArray_;
   var data = 's 0\n';
+
+  if(mtl_name)
+  {
+    data += 'mtllib '+mtl_name+'.mtl\n'
+    data += 'usemtl '+mtl_name+'\n'
+  }
   var nbVertices = mesh.vertices_.length;
   var nbTriangles = mesh.triangles_.length;
   var i = 0,
@@ -99,14 +105,30 @@ Files.exportOBJ = function (mesh)
   return data;
 };
 
+Files.exportColorMtl = function (color)
+{
+  var data = 'newmtl color\n';
+  var r = color.r / 255.0;
+  var g = color.g / 255.0;
+  var b = color.b / 255.0;
+  data += 'Ka '+ r * 0.1 + ' ' + g * 0.1 + ' ' + b * 0.1 + '\n';
+  data += 'Kd '+ r + ' ' + g + ' ' + b + '\n';
+  data += 'Ks 1.0 1.0 1.0\n';
+  data += 'Ns 200.0\n';
+  data += 'd 1.0\n'; // no transparency
+  return data;
+}
+
 /** Export OBJ file to Sketchfab */
-Files.exportSketchfab = function (mesh)
+Files.exportSketchfab = function (mesh, color)
 {
 
   // create a zip containing the .obj model
-  var model = Files.exportOBJ(mesh);
+  var model = Files.exportOBJ(mesh, "color");
+  var mtl = Files.exportColorMtl(color);
   var zip = new JSZip();
   zip.file("model.obj", model);
+  zip.file("color.mtl", mtl);
   var blob = zip.generate({type:"blob", compression:"DEFLATE"});
 
   var options = {
