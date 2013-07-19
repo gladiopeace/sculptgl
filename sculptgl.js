@@ -232,6 +232,11 @@ SculptGL.prototype = {
     $('#undo').on('click', this.undo_.bind(this));
     $('#redo').on('click', this.redo_.bind(this));
 
+    // About
+    $('#about').on('click', function() {
+      $('#about-popup').show();
+    });
+
     // Buttons
     $('#reset').on('click', this.resetSphere_.bind(this));
     $('#export').on('click', this.exportSketchfab_.bind(this));
