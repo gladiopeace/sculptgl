@@ -79,9 +79,9 @@ html, body {
   .main-menu ul > li > ul {
     position: absolute;
     top: 50px;
-    left: 20px;
+    left: 10px;
     background: #222222;
-    width: 200px;
+    width: 160px;
     padding: 8px;
     border-radius: 0 4px 4px 0;
     pointer-events: none;
