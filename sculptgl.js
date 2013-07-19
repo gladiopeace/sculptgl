@@ -282,39 +282,6 @@ SculptGL.prototype = {
   {
     var self = this;
 
-    //mesh fold
-    var foldMesh = gui.addFolder('Mesh');
-    this.ctrlNbVertices_ = foldMesh.add(this, 'dummyFunc_').name('Ver : 0');
-    this.ctrlNbTriangles_ = foldMesh.add(this, 'dummyFunc_').name('Tri : 0');
-    this.ctrlColor_ = foldMesh.addColor(new Render(), 'color_').name('Color');
-    this.ctrlColor_.onChange(function ()
-    {
-      self.render();
-    });
-    var optionsShaders = {
-      'Phong': Render.mode.PHONG,
-      'Wireframe (slow)': Render.mode.WIREFRAME,
-      'Transparency': Render.mode.TRANSPARENCY,
-      'Clay': Render.mode.MATERIAL,
-      'Chavant': Render.mode.MATERIAL + 1,
-      'Skin': Render.mode.MATERIAL + 2,
-      'Drink': Render.mode.MATERIAL + 3,
-      'Red velvet': Render.mode.MATERIAL + 4,
-      'Orange': Render.mode.MATERIAL + 5,
-      'Bronze': Render.mode.MATERIAL + 6
-    };
-    this.ctrlShaders_ = foldMesh.add(new Render(), 'shaderType_', optionsShaders).name('Shader');
-    this.ctrlShaders_.onChange(function (value)
-    {
-      if (self.mesh_)
-      {
-        self.mesh_.render_.updateShaders(parseInt(value, 10), self.textures_, self.shaders_);
-        self.mesh_.updateBuffers();
-        self.render();
-      }
-    });
-    foldMesh.open();
-
     //sculpt fold
     var foldSculpt = gui.addFolder('Sculpt');
     var optionsSculpt = {
@@ -354,6 +321,39 @@ SculptGL.prototype = {
     });
     foldTopo.add(this.sculpt_, 'detail_', 0, 1).name('Detail');
     foldTopo.open();
+
+    //mesh fold
+    var foldMesh = gui.addFolder('Mesh');
+    this.ctrlNbVertices_ = foldMesh.add(this, 'dummyFunc_').name('Ver : 0');
+    this.ctrlNbTriangles_ = foldMesh.add(this, 'dummyFunc_').name('Tri : 0');
+    this.ctrlColor_ = foldMesh.addColor(new Render(), 'color_').name('Color');
+    this.ctrlColor_.onChange(function ()
+    {
+      self.render();
+    });
+    // var optionsShaders = {
+    //   'Phong': Render.mode.PHONG,
+    //   'Wireframe (slow)': Render.mode.WIREFRAME,
+    //   'Transparency': Render.mode.TRANSPARENCY,
+    //   'Clay': Render.mode.MATERIAL,
+    //   'Chavant': Render.mode.MATERIAL + 1,
+    //   'Skin': Render.mode.MATERIAL + 2,
+    //   'Drink': Render.mode.MATERIAL + 3,
+    //   'Red velvet': Render.mode.MATERIAL + 4,
+    //   'Orange': Render.mode.MATERIAL + 5,
+    //   'Bronze': Render.mode.MATERIAL + 6
+    // };
+    // this.ctrlShaders_ = foldMesh.add(new Render(), 'shaderType_', optionsShaders).name('Shader');
+    // this.ctrlShaders_.onChange(function (value)
+    // {
+    //   if (self.mesh_)
+    //   {
+    //     self.mesh_.render_.updateShaders(parseInt(value, 10), self.textures_, self.shaders_);
+    //     self.mesh_.updateBuffers();
+    //     self.render();
+    //   }
+    // });
+    foldMesh.open();
   },
 
   /** Render mesh */
@@ -708,8 +708,8 @@ SculptGL.prototype = {
     var mesh = this.mesh_;
     this.ctrlColor_.object = mesh.render_;
     this.ctrlColor_.updateDisplay();
-    this.ctrlShaders_.object = mesh.render_;
-    this.ctrlShaders_.updateDisplay();
+    // this.ctrlShaders_.object = mesh.render_;
+    // this.ctrlShaders_.updateDisplay();
     this.ctrlNbVertices_.name('Ver : ' + mesh.vertices_.length);
     this.ctrlNbTriangles_.name('Tri : ' + mesh.triangles_.length);
   },

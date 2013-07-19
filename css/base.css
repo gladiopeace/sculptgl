@@ -97,7 +97,8 @@ html, body {
     font-size: 14px;
     line-height: 30px;
     margin-left: 0;
-    padding-left: 10px; }
+    padding-left: 10px;
+    font-size: 12px; }
   .main-menu li.group-title {
     font-size: 14px;
     font-weight: 600;
