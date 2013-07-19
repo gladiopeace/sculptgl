@@ -224,6 +224,8 @@ SculptGL.prototype = {
   /** Initialize the app menu (at the top) */
   initMenu: function()
   {
+    var self = this;
+
     // File
     $('#load-obj').on('click', this.open_.bind(this));
     $('#save-obj').on('click', this.save_.bind(this));
@@ -238,8 +240,19 @@ SculptGL.prototype = {
       if (group) {
         $(this).siblings('li[data-radio='+group+']').removeClass('checked');
         $(this).addClass('checked');
+
+        if (group === 'camera-mode') {
+          self.camera_.updateMode(parseInt($(this).data('value'), 10));
+          self.render();
+        }
       } else {
         $(this).toggleClass('checked');
+
+        if ($(this).data('value') === 'radius') {
+          this.usePenRadius_ != this.usePenRadius_;
+        } else if ($(this).data('value') === 'intensity') {
+          this.usePenIntensity_ != this.usePenIntensity_;
+        }
       }
     });
 
