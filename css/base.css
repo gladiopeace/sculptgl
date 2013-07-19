@@ -223,3 +223,79 @@ html, body {
   #gui-container .c input[type="text"] {
     padding: 0;
     line-height: 20px; }
+
+.skfb-uploader {
+  position: relative;
+  border-radius: 4px; }
+  .skfb-uploader h1 {
+    font-weight: normal;
+    padding: 0;
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    color: #ececec;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 30px; }
+  .skfb-uploader label {
+    display: none; }
+  .skfb-uploader > div {
+    font-size: 17px; }
+  .skfb-uploader > div + div {
+    margin-top: 30px; }
+  .skfb-uploader input[type="text"],
+  .skfb-uploader textarea {
+    background: #444;
+    display: block;
+    padding: 20px;
+    border-radius: 4px;
+    border: 0;
+    width: 100%;
+    color: #fff;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 17px; }
+    .skfb-uploader input[type="text"]:focus,
+    .skfb-uploader textarea:focus {
+      background: #777777;
+      outline: 0; }
+  .skfb-uploader textarea {
+    height: 100px; }
+  .skfb-uploader .btn {
+    width: 100%;
+    background: #1caad9;
+    padding: 0 20px;
+    line-height: 60px;
+    margin-top: 40px;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #fff;
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 2px;
+    -webkit-transition: 0.15s background ease;
+    -ms-transition: 0.15s background ease;
+    -moz-transition: 0.15s background ease;
+    -o-transition: 0.15s background ease;
+    transition: 0.15s background ease; }
+    .skfb-uploader .btn:hover {
+      background: #1998c2; }
+  .skfb-uploader .cancel {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    color: #777;
+    text-decoration: none;
+    border: 2px solid #777;
+    border-radius: 40px;
+    width: 20px;
+    height: 20px;
+    display: block;
+    line-height: 20px;
+    text-align: center; }
