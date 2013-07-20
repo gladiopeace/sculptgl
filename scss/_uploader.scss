@@ -50,7 +50,8 @@
   }
 
   textarea {
-    height: 143px;
+    height: 113px;
+    font-family: 'Open Sans', sans-serif;
   }
 
   .btn {
@@ -120,6 +121,23 @@
 
     &:focus {
       background: none;
+    }
+  }
+
+  #login-status {
+    height: 40px;
+    color: $text;
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 20px;
+
+    a {
+      color: $blue;
+      text-decoration: none;
+
+      &:hover {
+        color: lighten($blue, 5%);
+      }
     }
   }
 }

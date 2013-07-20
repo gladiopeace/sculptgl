@@ -289,7 +289,8 @@ html, body {
       outline: 0; }
   .skfb-uploader textarea,
   .modal textarea {
-    height: 143px; }
+    height: 113px;
+    font-family: 'Open Sans', sans-serif; }
   .skfb-uploader .btn,
   .modal .btn {
     width: 100%;
@@ -362,6 +363,20 @@ html, body {
     .skfb-uploader input[readonly]:focus,
     .modal input[readonly]:focus {
       background: none; }
+  .skfb-uploader #login-status,
+  .modal #login-status {
+    height: 40px;
+    color: #ececec;
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 20px; }
+    .skfb-uploader #login-status a,
+    .modal #login-status a {
+      color: #1caad9;
+      text-decoration: none; }
+      .skfb-uploader #login-status a:hover,
+      .modal #login-status a:hover {
+        color: #2bb6e4; }
 
 .modal {
   opacity: 0;
