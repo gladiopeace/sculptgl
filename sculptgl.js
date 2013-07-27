@@ -108,6 +108,11 @@ SculptGL.prototype = {
     {
       self.onWindowResize(event);
     });
+    // prevent touch scroll
+    $(window.body).bind('touchmove', function (event) {
+      event.preventDefault();
+    });
+
   },
 
   /** Load webgl context */
