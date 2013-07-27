@@ -378,15 +378,27 @@ SculptGL.prototype = {
     // });
     foldMesh.open();
   },
+  /** render (3d and Dom) when possible rather than on each event*/
+  animate: function ()
+   {
+     var gl = this.gl_;
+     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+     this.camera_.updateView();
+     if (this.mesh_)
+       this.mesh_.render(this.camera_, this.picking_);
 
-  /** Render mesh */
+    this.ctrlNbVertices_.name('Vertices : ' + this.mesh_.vertices_.length);
+    this.ctrlNbTriangles_.name('Triangles : ' + this.mesh_.triangles_.length);
+
+    this.queued = false;
+  },
+  /** Request a render */
   render: function ()
   {
-    var gl = this.gl_;
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    this.camera_.updateView();
-    if (this.mesh_)
-      this.mesh_.render(this.camera_, this.picking_);
+    if (this.queued)
+      return;
+    this.queued = true;
+    window.requestAnimationFrame(this.animate.bind(this));
   },
 
   /** Called when the window is resized */
@@ -677,8 +689,6 @@ SculptGL.prototype = {
         }
       }
       this.mesh_.updateBuffers();
-      this.ctrlNbVertices_.name('Vertices : ' + this.mesh_.vertices_.length);
-      this.ctrlNbTriangles_.name('Triangles : ' + this.mesh_.triangles_.length);
     }
     else if (touches.length === 3){
       this.camera_.rotate(mouseX, mouseY);
