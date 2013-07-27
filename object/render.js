@@ -140,7 +140,7 @@ Render.prototype = {
 
     this.indexBuffer_ = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer_);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, iAr, gl.STATIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, iAr, gl.DYNAMIC_DRAW);
   },
 
   /** Render the mesh */
@@ -225,7 +225,7 @@ Render.prototype = {
     gl.bufferData(gl.ARRAY_BUFFER, nAr, gl.DYNAMIC_DRAW);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer_);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, iAr, gl.STATIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, iAr, gl.DYNAMIC_DRAW);
   },
 
   /** Create arrays for the drawArrays function */

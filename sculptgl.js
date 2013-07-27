@@ -384,12 +384,12 @@ SculptGL.prototype = {
      var gl = this.gl_;
      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
      this.camera_.updateView();
-     if (this.mesh_)
-       this.mesh_.render(this.camera_, this.picking_);
-
-    this.ctrlNbVertices_.name('Vertices : ' + this.mesh_.vertices_.length);
-    this.ctrlNbTriangles_.name('Triangles : ' + this.mesh_.triangles_.length);
-
+     if (this.mesh_){
+      this.mesh_.doUpdateBuffers();
+      this.mesh_.render(this.camera_, this.picking_);
+      this.ctrlNbVertices_.name('Vertices : ' + this.mesh_.vertices_.length);
+      this.ctrlNbTriangles_.name('Triangles : ' + this.mesh_.triangles_.length);
+     }
     this.queued = false;
   },
   /** Request a render */
@@ -598,8 +598,6 @@ SculptGL.prototype = {
         }
       }
       this.mesh_.updateBuffers();
-      this.ctrlNbVertices_.name('Vertices : ' + this.mesh_.vertices_.length);
-      this.ctrlNbTriangles_.name('Triangles : ' + this.mesh_.triangles_.length);
     }
     else if (this.mouseButton_ === 3)
       this.camera_.rotate(mouseX, mouseY);

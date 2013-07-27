@@ -281,9 +281,16 @@ Mesh.prototype = {
   },
 
   /** Update the rendering buffers */
+  doUpdateBuffers: function ()
+  {
+    if (this.queued)
+      this.render_.updateBuffers(this.vertexArray_, this.normalArray_, this.indexArray_);
+    this.queued = false;
+  },
+  /** Update the rendering buffers */
   updateBuffers: function ()
   {
-    this.render_.updateBuffers(this.vertexArray_, this.normalArray_, this.indexArray_);
+    this.queued = true;
   },
 
   /** Update geometry  */
