@@ -1,5 +1,15 @@
 'use strict';
 
+(function() {
+    var lastTime = 0;
+    var vendors = ['moz', 'webkit'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+    }
+    if (!window.requestAnimationFrame)
+      alert("browser is too old. Probably no webgl there anyway");
+}());
+
 function SculptGL()
 {
   this.gl_ = null; //webgl context
@@ -74,6 +84,7 @@ SculptGL.prototype = {
   {
     var self = this;
     var $canvas = $('#canvas');
+    // mouse
     $canvas.mousedown(function (event)
     {
       self.onMouseDown(event);
@@ -94,6 +105,29 @@ SculptGL.prototype = {
     {
       self.onMouseOut(event);
     });
+
+    // multi touch
+    $canvas.bind('touchstart', function (event)
+    {
+      self.onTouchStart(event);
+    });
+    $canvas.bind('touchend', function (event)
+    {
+      self.onTouchEnd(event);
+    });
+    $canvas.bind('touchmove', function (event)
+    {
+      self.onTouchMove(event);
+    });
+    $canvas.bind('touchleave', function (event)
+    {
+      self.onMouseOut(event);
+    });
+    $canvas.bind('touchcancel', function (event)
+    {
+      self.onMouseOut(event);
+    });
+
     $canvas[0].addEventListener('webglcontextlost', self.onContextLost, false);
     $canvas[0].addEventListener('webglcontextrestored', self.onContextRestored, false);
     $(window).keydown(function (event)
@@ -108,6 +142,11 @@ SculptGL.prototype = {
     {
       self.onWindowResize(event);
     });
+    // prevent touch scroll
+    $(window.body).bind('touchmove', function (event) {
+      event.preventDefault();
+    });
+
   },
 
   /** Load webgl context */
@@ -349,15 +388,27 @@ SculptGL.prototype = {
     // });
     foldMesh.open();
   },
-
-  /** Render mesh */
+  /** render (3d and Dom) when possible rather than on each event*/
+  animate: function ()
+   {
+     var gl = this.gl_;
+     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+     this.camera_.updateView();
+     if (this.mesh_){
+      this.mesh_.doUpdateBuffers();
+      this.mesh_.render(this.camera_, this.picking_);
+      this.ctrlNbVertices_.name('Vertices : ' + this.mesh_.vertices_.length);
+      this.ctrlNbTriangles_.name('Triangles : ' + this.mesh_.triangles_.length);
+     }
+    this.queued = false;
+  },
+  /** Request a render */
   render: function ()
   {
-    var gl = this.gl_;
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    this.camera_.updateView();
-    if (this.mesh_)
-      this.mesh_.render(this.camera_, this.picking_);
+    if (this.queued)
+      return;
+    this.queued = true;
+    window.requestAnimationFrame(this.animate.bind(this));
   },
 
   /** Called when the window is resized */
@@ -557,8 +608,6 @@ SculptGL.prototype = {
         }
       }
       this.mesh_.updateBuffers();
-      this.ctrlNbVertices_.name('Vertices : ' + this.mesh_.vertices_.length);
-      this.ctrlNbTriangles_.name('Triangles : ' + this.mesh_.triangles_.length);
     }
     else if (this.mouseButton_ === 3)
       this.camera_.rotate(mouseX, mouseY);
@@ -569,6 +618,96 @@ SculptGL.prototype = {
     this.render();
   },
 
+
+  /** touch start event */
+  onTouchStart: function (event)
+  {
+    event.stopPropagation();
+    event.preventDefault();
+    var touches = event.originalEvent.targetTouches;
+    /*for (var i = 0; i < touches; i) {
+        var touch = touches[i];
+        console.log('touched '  touch.identifier);
+    }*/
+
+    event.stopPropagation();
+    event.preventDefault();
+    var mouseX = touches[0].pageX,
+      mouseY = touches[0].pageY;
+    this.mouseButton_ = touches.length;
+    var button = touches.length;
+    if (button === 1)
+    {
+      if (this.mesh_)
+      {
+        this.states_.start();
+        if (this.sculpt_.tool_ === Sculpt.tool.ROTATE)
+        {
+          if (this.symmetry_)
+            this.sculpt_.startRotate(this.picking_, mouseX, mouseY, this.pickingSym_, this.ptPlane_, this.nPlane_);
+          else
+            this.sculpt_.startRotate(this.picking_, mouseX, mouseY);
+        }
+      }
+    }
+    else if (button === 3)
+      this.camera_.start(mouseX, mouseY);
+  },
+
+  /** touch end event */
+  onTouchEnd: function (event)
+  {
+    event.stopPropagation();
+    event.preventDefault();
+    if (this.mesh_)
+      this.mesh_.checkLeavesUpdate();
+    this.mouseButton_ = 0;
+  },
+
+  /** touch move event */
+  onTouchMove: function (event, delta)
+  {
+    var touches = event.originalEvent.targetTouches;
+    /*for (var i = 0; i < touches; i) {
+        var touch = touches[i];
+        console.log('touched '  touch.identifier);
+    }*/
+
+    event.stopPropagation();
+    event.preventDefault();
+    var mouseX = touches[0].pageX,
+      mouseY = touches[0].pageY;
+    var pressure = Tablet.pressure();
+    var pressureRadius = this.usePenRadius_ ? pressure : 1;
+    var pressureIntensity = this.usePenIntensity_ ? pressure : 1;
+    if (this.mesh_ && this.mouseButton_ !== 1)
+      this.picking_.intersectionMouseMesh(this.mesh_, mouseX, mouseY, pressureRadius);
+    if (touches.length === 1)
+    {
+      if (this.sculpt_.tool_ !== Sculpt.tool.ROTATE)
+        this.sculptStroke(mouseX, mouseY, pressureRadius, pressureIntensity);
+      else if (this.picking_.mesh_)
+      {
+        this.picking_.pickVerticesInSphere(this.picking_.rWorldSqr_);
+        this.sculpt_.sculptMesh(this.picking_, pressureIntensity, mouseX, mouseY, this.lastMouseX_, this.lastMouseY_);
+        if (this.symmetry_)
+        {
+          this.pickingSym_.pickVerticesInSphere(this.pickingSym_.rWorldSqr_);
+          this.sculpt_.sculptMesh(this.pickingSym_, pressureIntensity, this.lastMouseX_, this.lastMouseY_, mouseX, mouseY, true);
+        }
+      }
+      this.mesh_.updateBuffers();
+    }
+    else if (touches.length === 3){
+      this.camera_.rotate(mouseX, mouseY);
+    }
+    else if (touches.length === 2){
+      this.camera_.translate((mouseX - this.lastMouseX_) / 3000, (mouseY - this.lastMouseY_) / 3000);
+    }
+    this.lastMouseX_ = mouseX;
+    this.lastMouseY_ = mouseY;
+    this.render();
+  },
   /** Make a brush stroke */
   sculptStroke: function (mouseX, mouseY, pressureRadius, pressureIntensity)
   {
