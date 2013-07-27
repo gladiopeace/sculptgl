@@ -1,5 +1,15 @@
 'use strict';
 
+(function() {
+    var lastTime = 0;
+    var vendors = ['moz', 'webkit'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+    }
+    if (!window.requestAnimationFrame)
+      alert("browser is too old. Probably no webgl there anyway");
+}());
+
 function SculptGL()
 {
   this.gl_ = null; //webgl context
