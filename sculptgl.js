@@ -437,10 +437,12 @@ SculptGL.prototype = {
         } else
           this.sculpt_.sculptStroke( mouseX, mouseY, pressureRadius, pressureIntensity, this );
       }
-    } else if ( button === 3 ) {
-      if ( this.camera_.usePivot_ )
-        this.picking_.intersectionMouseMesh( this.mesh_, mouseX, mouseY, pressureRadius );
-      this.camera_.start( mouseX, mouseY, this.picking_ );
+    }
+    if (button === 3 || (button === 1 && this.picking_.mesh_ === null) || (event.altKey && button !== 0)) {
+      this.mouseButton_ = 3;
+      if (this.camera_.usePivot_)
+        this.picking_.intersectionMouseMesh(this.mesh_, mouseX, mouseY, pressureRadius);
+      this.camera_.start(mouseX, mouseY, this.picking_);
     }
   },
 
@@ -616,12 +618,12 @@ SculptGL.prototype = {
         this.sculpt_.sculptStroke( mouseX, mouseY, pressureRadius, pressureIntensity, this );
         this.gui_.updateMeshInfo();
       }
-    } else if ( button === 3 || ( event.altKey && !event.shiftKey && !event.ctrlKey ) )
-      this.camera_.rotate( mouseX, mouseY );
-    else if ( button === 2 || ( event.altKey && event.shiftKey ) )
-      this.camera_.translate( ( mouseX - this.lastMouseX_ ) / 3000.0, ( mouseY - this.lastMouseY_ ) / 3000.0 );
-    else if ( event.altKey && event.ctrlKey )
-      this.camera_.zoom( ( mouseY - this.lastMouseY_ ) / 3000.0 );
+    } else if (button === 2 || (event.altKey && event.shiftKey && button !== 0))
+      this.camera_.translate((mouseX - this.lastMouseX_) / 3000.0, (mouseY - this.lastMouseY_) / 3000.0);
+    else if (event.altKey && event.ctrlKey && button !== 0)
+      this.camera_.zoom((mouseY - this.lastMouseY_) / 3000.0);
+    else if (button === 3 || (event.altKey && !event.shiftKey && !event.ctrlKey && button !== 0))
+      this.camera_.rotate(mouseX, mouseY);
     this.lastMouseX_ = mouseX;
     this.lastMouseY_ = mouseY;
     this.render();
