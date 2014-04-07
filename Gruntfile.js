@@ -24,7 +24,7 @@ module.exports = function (grunt) {
     main: {
       files: [{
         expand: true,
-        src: ['css/*', 'shaders/*', 'lib/*', 'ressources/*'],
+        src: ['css/*', 'shaders/*', 'lib/*', 'ressources/*', 'fonts/*'],
         dest: 'build/',
         filter: 'isFile'
       }, {
@@ -45,15 +45,7 @@ module.exports = function (grunt) {
         timestamp: true,
         hash: true
       },
-      src: [
-        '**/*.html',
-        '**/*.js',
-        '**/*.jpg',
-        '**/*.css',
-        '**/*.vert',
-        '**/*.frag',
-        '**/*.obj'
-      ],
+      src: ['css/*', 'shaders/*', 'lib/*', 'ressources/*', 'fonts/*'],
       dest: 'build/manifest.appcache'
     }
   };
