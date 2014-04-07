@@ -1,0 +1,140 @@
+#topbar {
+  background: $darker;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  font-family: 'Open Sans', sans-serif;
+  padding: 0 30px;
+  @include prefix(box-sizing, border-box);
+}
+
+.logo,
+.main-menu {
+  float: left;
+}
+
+.logo {
+  margin-top: 13px;
+  margin-right: 20px;
+}
+
+.main-menu {
+  color: $text;
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  ul > li {
+    float: left;
+    line-height: 60px;
+    padding-left: 30px;
+    position: relative;
+    cursor: pointer;
+
+    .shortcut {
+      float: right;
+      color: $light;
+      font-size: 12px;
+      margin-right: 10px;
+    }
+
+    &:hover {
+      color: $blue;
+    }
+
+    &:hover > ul {
+      display: block;
+      color: $text;
+      opacity: 1;
+      pointer-events: auto;
+      top: 50px;
+    }
+  }
+
+  ul > li > ul {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    background: $darker;
+    width: 160px;
+    padding: 8px;
+    border-radius: 0 4px 4px 0;
+    pointer-events: none;
+    opacity: 0;
+    @include prefix(transition, .15s all ease);
+  }
+
+  ul > li > ul > li {
+    float: none;
+    display: block;
+    font-size: 14px;
+    line-height: 30px;
+    margin-left: 0;
+    padding-left: 5px;
+    font-size: 12px;
+  }
+
+  li.group-title {
+    font-size: $folderTitles;
+    font-weight: 600;
+    color: $light;
+    text-transform: uppercase;
+    padding-left: 10px;
+    border-bottom: 1px solid $dark;
+    padding-bottom: 5px;
+    margin: 5px 0 10px 0;
+
+    &:hover {
+      color: $light;
+    }
+  }
+}
+
+.main-actions {
+  float: right;
+  color: $text;
+}
+
+.reset,
+.export-button {
+  float: left;
+  line-height: 40px;
+  margin-top: 10px;
+  cursor: pointer;
+
+  i {
+    margin-right: 10px;
+  }
+}
+
+.export-button {
+  background: $blue;
+  border-radius: 4px;
+  padding: 0 20px;
+  margin-left: 40px;
+  @include prefix(transition, .15s background ease);
+
+  &:hover {
+    background: darken($blue, 5%);
+  }
+}
+
+.reset:hover {
+  color: $red;
+}
+
+.options li.togglable:before {
+  content: '\f00c';
+  font-family: 'FontAwesome';
+  margin-right: 5px;
+  opacity: 0;
+}
+
+.options li.togglable.checked:before {
+  opacity: 1;
+}

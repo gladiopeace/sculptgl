@@ -97,6 +97,24 @@ define([
       $canvas.mouseout(function (event) {
         self.onMouseOut(event);
       });
+
+      // multi touch
+      $canvas.bind('touchstart', function (event) {
+        self.onTouchStart(event);
+      });
+      $canvas.bind('touchend', function (event) {
+        self.onTouchEnd(event);
+      });
+      $canvas.bind('touchmove', function (event) {
+        self.onTouchMove(event);
+      });
+      $canvas.bind('touchleave', function (event) {
+        self.onMouseOut(event);
+      });
+      $canvas.bind('touchcancel', function (event) {
+        self.onMouseOut(event);
+      });
+
       $canvas[0].addEventListener('webglcontextlost', self.onContextLost, false);
       $canvas[0].addEventListener('webglcontextrestored', self.onContextRestored, false);
       $(window).keydown(function (event) {
@@ -114,7 +132,8 @@ define([
       // TODO : add an option to toggle antialias if possible ?
       var attributes = {
         antialias: true,
-        stencil: true
+        stencil: true,
+        preserveDrawingBuffer: true
       };
       try {
         this.gl_ = $('#canvas')[0].getContext('webgl', attributes) || $('#canvas')[0].getContext('experimental-webgl', attributes);
@@ -191,12 +210,17 @@ define([
     },
     /** Load the sphere */
     loadSphere: function () {
-      var sphereXhr = new XMLHttpRequest();
-      sphereXhr.open('GET', 'ressources/sphere.obj', true);
       var self = this;
+      var sphereXhr = new XMLHttpRequest();
+      sphereXhr.open('GET', 'ressources/egg.obj', true);
+      sphereXhr.responseType = 'arraybuffer';
       sphereXhr.onload = function () {
-        self.sphere_ = this.responseText;
-        self.resetSphere();
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+          self.sphere_ = evt.target.result;
+          self.resetSphere();
+        };
+        reader.readAsBinaryString(new Blob([this.response]));
       };
       sphereXhr.send(null);
     },
@@ -243,49 +267,49 @@ define([
       }
       var gui = this.gui_;
       switch (key) {
-      case 48: // 0
-      case 96: // NUMPAD 0
-        gui.setSculptTool(Sculpt.tool.SCALE);
-        break;
-      case 49: // 1
-      case 97: // NUMPAD 1
-        gui.setSculptTool(Sculpt.tool.BRUSH);
-        break;
-      case 50: // 2
-      case 98: // NUMPAD 2
-        gui.setSculptTool(Sculpt.tool.INFLATE);
-        break;
-      case 51: // 3
-      case 99: // NUMPAD 3
-        gui.setSculptTool(Sculpt.tool.ROTATE);
-        break;
-      case 52: // 4
-      case 100: // NUMPAD 4
-        gui.setSculptTool(Sculpt.tool.SMOOTH);
-        break;
-      case 53: // 5
-      case 101: // NUMPAD 5
-        gui.setSculptTool(Sculpt.tool.FLATTEN);
-        break;
-      case 54: // 6
-      case 102: // NUMPAD 6
-        gui.setSculptTool(Sculpt.tool.PINCH);
-        break;
-      case 55: // 7
-      case 103: // NUMPAD 7
-        gui.setSculptTool(Sculpt.tool.CREASE);
-        break;
-      case 56: // 8
-      case 104: // NUMPAD 8
-        gui.setSculptTool(Sculpt.tool.DRAG);
-        break;
+        // case 48: // 0
+        // case 96: // NUMPAD 0
+        //   gui.setSculptTool(Sculpt.tool.SCALE);
+        //   break;
+        // case 49: // 1
+        // case 97: // NUMPAD 1
+        //   gui.setSculptTool(Sculpt.tool.BRUSH);
+        //   break;
+        // case 50: // 2
+        // case 98: // NUMPAD 2
+        //   gui.setSculptTool(Sculpt.tool.INFLATE);
+        //   break;
+        // case 51: // 3
+        // case 99: // NUMPAD 3
+        //   gui.setSculptTool(Sculpt.tool.ROTATE);
+        //   break;
+        // case 52: // 4
+        // case 100: // NUMPAD 4
+        //   gui.setSculptTool(Sculpt.tool.SMOOTH);
+        //   break;
+        // case 53: // 5
+        // case 101: // NUMPAD 5
+        //   gui.setSculptTool(Sculpt.tool.FLATTEN);
+        //   break;
+        // case 54: // 6
+        // case 102: // NUMPAD 6
+        //   gui.setSculptTool(Sculpt.tool.PINCH);
+        //   break;
+        // case 55: // 7
+        // case 103: // NUMPAD 7
+        //   gui.setSculptTool(Sculpt.tool.CREASE);
+        //   break;
+        // case 56: // 8
+        // case 104: // NUMPAD 8
+        //   gui.setSculptTool(Sculpt.tool.DRAG);
+        //   break;
       case 57: // 9
       case 105: // NUMPAD 9
         gui.setSculptTool(Sculpt.tool.COLOR);
         break;
-      case 78: // N
-        gui.setNegative(!this.sculpt_.negative_);
-        break;
+        // case 78: // N
+        //   gui.setNegative(!this.sculpt_.negative_);
+        //   break;
       case 37: // LEFT
       case 81: // Q
       case 65: // A
@@ -422,6 +446,91 @@ define([
       event.preventDefault();
       var mouseX = this.mouseX_ = event.pageX;
       var mouseY = this.mouseY_ = event.pageY;
+      var button = this.mouseButton_;
+      var tool = this.sculpt_.tool_;
+      var st = Sculpt.tool;
+      var modifierPressed = event.altKey || event.ctrlKey || event.shiftKey;
+      if (this.continuous_ && this.sculptTimer_ !== -1 && !modifierPressed) {
+        return;
+      }
+      if (this.multimesh_ && (button !== 1 || (tool !== st.ROTATE && tool !== st.DRAG && tool !== st.SCALE)))
+        this.picking_.intersectionMouseMesh(this.multimesh_, mouseX, mouseY);
+      if (button === 1 && !event.altKey)
+        this.sculpt_.sculptStroke(this);
+      else if (button === 2 || (event.altKey && event.shiftKey && button !== 0))
+        this.camera_.translate((mouseX - this.lastMouseX_) / 3000, (mouseY - this.lastMouseY_) / 3000);
+      else if (event.altKey && event.ctrlKey && button !== 0)
+        this.camera_.zoom((mouseY - this.lastMouseY_) / 3000);
+      else if (button === 3 || (event.altKey && !event.shiftKey && !event.ctrlKey && button !== 0))
+        this.camera_.rotate(mouseX, mouseY);
+      this.lastMouseX_ = mouseX;
+      this.lastMouseY_ = mouseY;
+      this.render();
+    },
+
+    /** touch start event */
+    onTouchStart: function (event) {
+      var touches = event.originalEvent.targetTouches;
+      /*for (var i = 0; i < touches; i) {
+        var touch = touches[i];
+        console.log('touched '  touch.identifier);
+    }*/
+      event.stopPropagation();
+      event.preventDefault();
+      var mouseX = this.mouseX_ = touches[0].pageX;
+      var mouseY = this.mouseY_ = touches[0].pageY;
+      var button = this.mouseButton_ = event.which;
+      if (button === 1 && !event.altKey) {
+        if (this.multimesh_) {
+          this.sumDisplacement_ = 0;
+          var tool = this.sculpt_.tool_;
+          var mesh = this.multimesh_.getCurrent();
+          this.states_.pushState(tool === Sculpt.tool.COLOR ? new StateColor(mesh) : new StateGeometry(mesh));
+          if (tool === Sculpt.tool.ROTATE)
+            this.sculpt_.startRotate(this.picking_, mouseX, mouseY, this.pickingSym_, this.ptPlane_, this.nPlane_, this.symmetry_);
+          else if (tool === Sculpt.tool.SCALE)
+            this.sculpt_.startScale(this.picking_, mouseX, mouseY, this.pickingSym_, this.ptPlane_, this.nPlane_, this.symmetry_);
+          else if (this.continuous_ && tool !== Sculpt.tool.DRAG) {
+            var self = this;
+            this.sculptTimer_ = setInterval(function () {
+              self.sculpt_.sculptStroke(self);
+              self.render();
+            }, 20);
+          } else
+            this.sculpt_.sculptStroke(this);
+        }
+      }
+      if (button === 3 || (button === 1 && this.picking_.multimesh_ === null) || (event.altKey && button !== 0)) {
+        this.mouseButton_ = 3;
+        if (this.camera_.usePivot_)
+          this.picking_.intersectionMouseMesh(this.multimesh_, mouseX, mouseY);
+        this.camera_.start(mouseX, mouseY, this.picking_);
+      }
+    },
+
+    /** touch end event */
+    onTouchEnd: function (event) {
+      event.stopPropagation();
+      event.preventDefault();
+      if (this.multimesh_)
+        this.multimesh_.checkLeavesUpdate();
+      if (this.sculptTimer_ !== -1) {
+        clearInterval(this.sculptTimer_);
+        this.sculptTimer_ = -1;
+      }
+      this.mouseButton_ = 0;
+    },
+    /** touch move event */
+    onTouchMove: function (event) {
+      var touches = event.originalEvent.targetTouches;
+      /*for (var i = 0; i < touches; i) {
+        var touch = touches[i];
+        console.log('touched '  touch.identifier);
+    }*/
+      event.stopPropagation();
+      event.preventDefault();
+      var mouseX = this.mouseX_ = touches[0].pageX;
+      var mouseY = this.mouseY_ = touches[0].pageY;
       var button = this.mouseButton_;
       var tool = this.sculpt_.tool_;
       var st = Sculpt.tool;

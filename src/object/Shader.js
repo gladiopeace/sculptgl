@@ -4,7 +4,7 @@ define([], function () {
 
   function Shader(gl) {
     this.gl_ = gl; //webgl context
-    this.type_ = Shader.mode.MATERIAL; //type of shader
+    this.type_ = Shader.mode.PHONG; //type of shader
 
     this.program_ = null; //program shader
     this.fragmentShader_ = null; //fragment shader

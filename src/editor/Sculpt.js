@@ -16,7 +16,7 @@ define([
     this.states_ = states; //for undo-redo
     this.multimesh_ = null; //mesh
     this.intensity_ = 0.75; //deformation intensity
-    this.tool_ = Sculpt.tool.BRUSH; //sculpting mode
+    this.tool_ = Sculpt.tool.COLOR; //sculpting mode
     this.detailSubdivision_ = 0.75; //maximal edge length before we subdivide it
     this.detailDecimation_ = 0.1; //minimal edge length before we collapse it (dependent of detailSubdivision_)
     this.negative_ = false; //opposition deformation

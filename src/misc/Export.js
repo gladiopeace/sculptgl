@@ -5,17 +5,25 @@ define([], function () {
   var Export = {};
 
   /** Export OBJ file */
-  Export.exportOBJ = function (mesh) {
+  Export.exportOBJ = function (mesh, mtl_name) {
     var vAr = mesh.verticesXYZ_;
+    var cAr = mesh.colorsRGB_;
     var iAr = mesh.indicesABC_;
     var data = 's 0\n';
+    if (mtl_name) {
+      data += 'mtllib ' + mtl_name + '.mtl\n';
+      data += 'usemtl ' + mtl_name + '\n';
+    }
     var nbVertices = mesh.getNbVertices();
     var nbTriangles = mesh.getNbTriangles();
     var i = 0,
       j = 0;
     for (i = 0; i < nbVertices; ++i) {
       j = i * 3;
-      data += 'v ' + vAr[j] + ' ' + vAr[j + 1] + ' ' + vAr[j + 2] + '\n';
+      if (mtl_name)
+        data += 'v ' + vAr[j] + ' ' + vAr[j + 1] + ' ' + vAr[j + 2] + ' ' + cAr[j] + ' ' + cAr[j + 1] + ' ' + cAr[j + 2] + '\n';
+      else
+        data += 'v ' + vAr[j] + ' ' + vAr[j + 1] + ' ' + vAr[j + 2] + '\n';
     }
     for (i = 0; i < nbTriangles; ++i) {
       j = i * 3;
@@ -92,28 +100,25 @@ define([], function () {
   };
 
   /** Export OBJ file to Sketchfab */
-  Export.exportSketchfab = function (mesh, key) {
-    var fd = new FormData();
+  Export.exportSketchfab = function (mesh) {
+    // create a zip containing the .obj model
+    var model = Export.exportOBJ(mesh, 'specular');
+    var mtl = Export.exportSpecularMtl();
+    var zip = new window.JSZip();
+    zip.file('model.obj', model);
+    zip.file('specular.mtl', mtl);
+    var blob = zip.generate({
+      type: 'blob',
+      compression: 'DEFLATE'
+    });
 
-    fd.append('token', key);
-    var model = Export.exportOBJ(mesh);
-
-    fd.append('fileModel', new Blob([model]));
-    fd.append('filenameModel', 'model.obj');
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'https://api.sketchfab.com/v1/models');
-
-    var result = function () {
-      var res = JSON.parse(xhr.responseText);
-      console.log(res);
-      if (!res.success)
-        window.alert('Sketchfab upload error :\n' + res.error);
-      else
-        window.alert('Upload success !');
+    var options = {
+      'fileModel': blob,
+      'filenameModel': 'model.zip',
+      'title': ''
     };
-    xhr.addEventListener('load', result, true);
-    xhr.send(fd);
+
+    window.Sketchfab.showUploader(options);
   };
 
   return Export;

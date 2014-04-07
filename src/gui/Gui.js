@@ -62,104 +62,100 @@ define([
   Gui.prototype = {
     /** Initialize dat-gui stuffs */
     initGui: function () {
-      var guiGeneral = new Dat.GUI();
-      guiGeneral.domElement.style.position = 'absolute';
-      guiGeneral.domElement.style.height = '650px';
-      this.initGeneralGui(guiGeneral);
-
+      var guiContainer = document.getElementById('gui-container');
       var guiEditing = new Dat.GUI();
       this.initEditingGui(guiEditing);
+      guiContainer.appendChild(guiEditing.domElement);
+
+      this.initGeneralGui();
 
       var main = this.sculptgl_;
-      guiGeneral.domElement.addEventListener('mouseout', function () {
+      guiEditing.domElement.addEventListener('mouseout', function () {
         main.focusGui_ = false;
       }, false);
       guiEditing.domElement.addEventListener('mouseout', function () {
         main.focusGui_ = false;
       }, false);
-      guiGeneral.domElement.addEventListener('mouseover', function () {
-        main.focusGui_ = true;
-      }, false);
-      guiEditing.domElement.addEventListener('mouseover', function () {
-        main.focusGui_ = true;
-      }, false);
     },
     /** Initialize the general gui (on the left) */
-    initGeneralGui: function (gui) {
+    initGeneralGui: function () {
       var main = this.sculptgl_;
-      var self = this;
 
-      //Pen tablet ui stuffs
-      var foldPenTablet = gui.addFolder('Wacom tablet');
-      foldPenTablet.add(Tablet, 'useOnRadius').name('Pressure radius');
-      foldPenTablet.add(Tablet, 'useOnIntensity').name('Pressure intensity');
+      // File
+      $('#load-file').on('click', this.open_.bind(this));
+      $('#save-obj').on('click', this.saveOBJ_.bind(this));
+      $('#save-ply').on('click', this.savePLY_.bind(this));
+      $('#save-stl').on('click', this.saveSTL_.bind(this));
 
-      //file fold
-      var foldFiles = gui.addFolder('Files (import/export)');
-      foldFiles.add(main, 'resetSphere_').name('Reset sphere');
-      foldFiles.add(this, 'open_').name('Import (obj, ply, stl)');
-      foldFiles.add(this, 'saveOBJ_').name('Export (obj)');
-      foldFiles.add(this, 'savePLY_').name('Export (ply)');
-      foldFiles.add(this, 'saveSTL_').name('Export (stl)');
+      // History
+      $('#undo').on('click', main.undo_.bind(main));
+      $('#redo').on('click', main.redo_.bind(main));
 
-      //Sketchfab fold
-      var foldSketchfab = gui.addFolder('Go to Sketchfab !');
-      foldSketchfab.add(this, 'keySketchfab_').name('API key');
-      foldSketchfab.add(this, 'exportSketchfab_').name('Upload');
+      // Reset camera
+      $('#resetcamera').on('click', this.resetCamera_.bind(this));
+
+      // Background
+      $('#resetbg').on('click', this.resetBg_.bind(this));
+      $('#importbg').on('click', this.importBg_.bind(this));
 
       //Camera fold
-      var cameraFold = gui.addFolder('Camera');
-      cameraFold.add(this, 'resetCamera_').name('Reset');
-      var optionsCameraMode = {
-        'Spherical': Camera.mode.SPHERICAL,
-        'Plane': Camera.mode.PLANE
-      };
-      var ctrlCameraMode = cameraFold.add(main.camera_, 'mode_', optionsCameraMode).name('Mode');
-      ctrlCameraMode.onChange(function (value) {
-        main.camera_.mode_ = parseInt(value, 10);
-      });
-      var optionsCameraType = {
-        'Perspective': Camera.projType.PERSPECTIVE,
-        'Orthographic': Camera.projType.ORTHOGRAPHIC
-      };
-      this.ctrlCameraType_ = cameraFold.add(main.camera_, 'type_', optionsCameraType).name('Type');
-      this.ctrlCameraType_.onChange(function (value) {
-        main.camera_.type_ = parseInt(value, 10);
-        self.ctrlFov_.__li.hidden = main.camera_.type_ === Camera.projType.ORTHOGRAPHIC;
-        main.camera_.updateProjection();
-        main.render();
-      });
-      this.ctrlFov_ = cameraFold.add(main.camera_, 'fov_', 10, 150).name('Fov');
-      this.ctrlFov_.onChange(function () {
-        main.camera_.updateProjection();
-        main.render();
-      });
-      var ctrlPivot = cameraFold.add(main.camera_, 'usePivot_').name('Picking pivot');
-      ctrlPivot.onChange(function () {
-        main.camera_.toggleUsePivot();
-        main.render();
-      });
-      cameraFold.open();
+      // this.ctrlFov_ = cameraFold.add(main.camera_, 'fov_', 10, 80).name('Fov');
+      // this.ctrlFov_.onChange(function (value)
+      // {
+      //   main.camera_.updateProjection();
+      //   main.render();
+      // });
 
-      //background fold
-      var backgroundFold = gui.addFolder('background');
-      backgroundFold.add(this, 'resetBg_').name('Reset');
-      backgroundFold.add(this, 'importBg_').name('Import (jpg, png...)');
-      backgroundFold.open();
+      // Options
+      $('.togglable').on('click', function () {
+        var group = $(this).data('radio');
+        if (group) {
+          $(this).siblings('li[data-radio=' + group + ']').removeClass('checked');
+          $(this).addClass('checked');
 
-      //history fold
-      var foldHistory = gui.addFolder('History');
-      foldHistory.add(main, 'undo_').name('Undo (Ctrl+Z)');
-      foldHistory.add(main, 'redo_').name('Redo (Ctrl+Y)');
-      foldHistory.open();
+          if (group === 'camera-mode') {
+            main.camera_.mode_ = (parseInt($(this).data('value'), 10));
+          }
+          if (group === 'camera-type') {
+            main.camera_.type_ = (parseInt($(this).data('value'), 10));
+            // self.ctrlFov_.__li.hidden = main.camera_.type_ === Camera.projType.ORTHOGRAPHIC;
+            main.camera_.updateProjection();
+            main.render();
+          }
+        } else {
+          $(this).toggleClass('checked');
+
+          if ($(this).data('value') === 'radius') {
+            Tablet.useOnRadius_ = !Tablet.useOnRadius_;
+          } else if ($(this).data('value') === 'intensity') {
+            Tablet.useOnIntensity_ = !Tablet.useOnIntensity_;
+          } else if ($(this).data('value') === 'pivot') {
+            main.camera_.toggleUsePivot();
+            main.camera_.usePivot_ = !main.camera_.usePivot_;
+            main.render();
+          }
+        }
+      });
+
+      // About
+      $('#about').on('click', function () {
+        $('#about-popup').addClass('visible');
+      });
+
+      $('#about-popup .cancel').on('click', function () {
+        $('#about-popup').removeClass('visible');
+      });
+
+      // Buttons
+      $('#reset').on('click', main.resetSphere_.bind(main));
+      $('#export').on('click', this.exportSketchfab_.bind(this));
     },
     /** Initialize the mesh editing gui (on the right) */
     initEditingGui: function (gui) {
       var main = this.sculptgl_;
-      var self = this;
 
       //sculpt fold
-      var foldSculpt = gui.addFolder('Sculpt');
+      var foldSculpt = gui.addFolder('Paint');
       var optionsSculpt = {
         'Brush (1)': Sculpt.tool.BRUSH,
         'Inflate (2)': Sculpt.tool.INFLATE,
@@ -173,21 +169,22 @@ define([
         'Scale (0)': Sculpt.tool.SCALE
       };
       this.ctrlSculpt_ = foldSculpt.add(main.sculpt_, 'tool_', optionsSculpt).name('Tool');
-      this.ctrlSculpt_.onChange(function (value) {
-        main.sculpt_.tool_ = parseInt(value, 10);
-        var tool = main.sculpt_.tool_;
-        var st = Sculpt.tool;
-        self.ctrlClay_.__li.hidden = tool !== st.BRUSH;
-        self.ctrlNegative_.__li.hidden = tool !== st.BRUSH && tool !== st.INFLATE && tool !== st.CREASE;
-        self.ctrlContinuous_.__li.hidden = tool === st.ROTATE || tool === st.DRAG || tool === st.SCALE;
-        self.ctrlIntensity_.__li.hidden = self.ctrlContinuous_.__li.hidden;
-        self.ctrlColor_.__li.hidden = tool !== st.COLOR;
-      });
-      this.ctrlClay_ = foldSculpt.add(main.sculpt_, 'clay_').name('Clay');
-      this.ctrlNegative_ = foldSculpt.add(main.sculpt_, 'negative_').name('Negative (N)');
-      this.ctrlContinuous_ = foldSculpt.add(main, 'continuous_').name('Continuous');
-      this.ctrlSymmetry_ = foldSculpt.add(main, 'symmetry_').name('Symmetry');
-      this.ctrlSculptCulling_ = foldSculpt.add(main.sculpt_, 'culling_').name('Sculpt culling');
+      this.ctrlSculpt_.__li.hidden = true;
+      // this.ctrlSculpt_.onChange(function (value) {
+      //   main.sculpt_.tool_ = parseInt(value, 10);
+      //   var tool = main.sculpt_.tool_;
+      //   var st = Sculpt.tool;
+      //   self.ctrlClay_.__li.hidden = tool !== st.BRUSH;
+      //   self.ctrlNegative_.__li.hidden = tool !== st.BRUSH && tool !== st.INFLATE && tool !== st.CREASE;
+      //   self.ctrlContinuous_.__li.hidden = tool === st.ROTATE || tool === st.DRAG || tool === st.SCALE;
+      //   self.ctrlIntensity_.__li.hidden = self.ctrlContinuous_.__li.hidden;
+      //   self.ctrlColor_.__li.hidden = tool !== st.COLOR;
+      // });
+      // this.ctrlClay_ = foldSculpt.add(main.sculpt_, 'clay_').name('Clay');
+      // this.ctrlNegative_ = foldSculpt.add(main.sculpt_, 'negative_').name('Negative (N)');
+      // this.ctrlContinuous_ = foldSculpt.add(main, 'continuous_').name('Continuous');
+      // this.ctrlSymmetry_ = foldSculpt.add(main, 'symmetry_').name('Symmetry');
+      // this.ctrlSculptCulling_ = foldSculpt.add(main.sculpt_, 'culling_').name('Sculpt culling');
       this.ctrlRadius_ = foldSculpt.add(main.picking_, 'rDisplay_', 5, 200).name('Radius');
       this.ctrlIntensity_ = foldSculpt.add(main.sculpt_, 'intensity_', 0, 1).name('Intensity');
       foldSculpt.open();
@@ -195,8 +192,8 @@ define([
       //multires fold
       var foldMultires = gui.addFolder('Multires');
       foldMultires.add(this, 'subdivide');
-      foldMultires.add(this, 'lower');
-      foldMultires.add(this, 'higher');
+      // foldMultires.add(this, 'lower');
+      // foldMultires.add(this, 'higher');
       foldMultires.open();
 
       //mesh fold
@@ -204,16 +201,16 @@ define([
       this.ctrlNbVertices_ = foldMesh.add(this, 'dummyFunc_').name('Ver : 0');
       this.ctrlNbTriangles_ = foldMesh.add(this, 'dummyFunc_').name('Tri : 0');
       var optionsShaders = {
-        'Phong': Shader.mode.PHONG,
-        'Transparency': Shader.mode.TRANSPARENCY,
-        'Normal shader': Shader.mode.NORMAL,
-        'Clay': Shader.mode.MATERIAL,
-        'Chavant': Shader.mode.MATERIAL + 1,
-        'Skin': Shader.mode.MATERIAL + 2,
-        'Drink': Shader.mode.MATERIAL + 3,
-        'Red velvet': Shader.mode.MATERIAL + 4,
-        'Orange': Shader.mode.MATERIAL + 5,
-        'Bronze': Shader.mode.MATERIAL + 6
+        'Phong': Shader.mode.PHONG
+        //   'Transparency': Shader.mode.TRANSPARENCY,
+        //   'Normal shader': Shader.mode.NORMAL,
+        //   'Clay': Shader.mode.MATERIAL,
+        //   'Chavant': Shader.mode.MATERIAL + 1,
+        //   'Skin': Shader.mode.MATERIAL + 2,
+        //   'Drink': Shader.mode.MATERIAL + 3,
+        //   'Red velvet': Shader.mode.MATERIAL + 4,
+        //   'Orange': Shader.mode.MATERIAL + 5,
+        //   'Bronze': Shader.mode.MATERIAL + 6
       };
       this.ctrlShaders_ = foldMesh.add(new Shader(), 'type_', optionsShaders).name('Shader');
       this.ctrlShaders_.onChange(function (value) {
@@ -229,7 +226,7 @@ define([
           main.render();
         }
       });
-      this.ctrlShowWireframe_ = foldMesh.add(new Render(), 'showWireframe_').name('wireframe');
+      this.ctrlShowWireframe_ = foldMultires.add(new Render(), 'showWireframe_').name('wireframe');
       this.ctrlShowWireframe_.onChange(function (value) {
         if (main.multimesh_) {
           main.multimesh_.setWireframe(value);
@@ -237,7 +234,7 @@ define([
         }
       });
 
-      this.ctrlColor_ = foldMesh.addColor(main.sculpt_, 'color_').name('Color');
+      this.ctrlColor_ = foldSculpt.addColor(main.sculpt_, 'color_').name('Color');
       this.ctrlColor_.onChange(function (value) {
         if (value.length === 3) { // rgb [255, 255, 255]
           main.sculpt_.color_ = [value[0], value[1], value[2]];
@@ -247,8 +244,9 @@ define([
         } else // fuck it
           main.sculpt_.color_ = [168, 66, 66];
       });
-      this.ctrlColor_.__li.hidden = true;
+      // this.ctrlColor_.__li.hidden = true;
       foldMesh.open();
+      foldMesh.__ul.hidden = true;
     },
     /** Update information on mesh */
     updateMesh: function () {
@@ -319,13 +317,14 @@ define([
     },
     /** Export to Sketchfab */
     exportSketchfab: function () {
-      if (!this.sculptgl_.mesh_)
+      if (!this.mesh_)
         return;
-      if (this.keySketchfab_ === '') {
-        window.alert('Please enter a sketchfab API Key.');
-        return;
-      }
-      Export.exportSketchfab(this.sculptgl_.mesh_, this.keySketchfab_);
+      Export.exportSketchfab(this.mesh_);
+
+      // Prevent shortcut keys from triggering in Sketchfab export
+      $('.skfb-uploader').on('keydown', function (e) {
+        e.stopPropagation();
+      });
     },
     /** Subdivide the mesh */
     subdivide: function () {
