@@ -317,9 +317,9 @@ define([
     },
     /** Export to Sketchfab */
     exportSketchfab: function () {
-      if (!this.mesh_)
+      if (!this.sculptgl_.mesh_)
         return;
-      Export.exportSketchfab(this.mesh_);
+      Export.exportSketchfab(this.sculptgl_.mesh_);
 
       // Prevent shortcut keys from triggering in Sketchfab export
       $('.skfb-uploader').on('keydown', function (e) {

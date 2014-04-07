@@ -99,6 +99,14 @@ define([], function () {
     return data;
   };
 
+  Export.exportSpecularMtl = function () {
+    var data = 'newmtl specular\n';
+    data += 'Ks 1.0 1.0 1.0\n';
+    data += 'Ns 200.0\n';
+    data += 'd 1.0\n'; // no transparency
+    return data;
+  };
+
   /** Export OBJ file to Sketchfab */
   Export.exportSketchfab = function (mesh) {
     // create a zip containing the .obj model
