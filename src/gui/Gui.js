@@ -195,6 +195,7 @@ define([
       // foldMultires.add(this, 'lower');
       // foldMultires.add(this, 'higher');
       foldMultires.open();
+      foldMultires.__ul.hidden = true;
 
       //mesh fold
       var foldMesh = gui.addFolder('Mesh');

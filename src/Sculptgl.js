@@ -212,13 +212,15 @@ define([
     loadSphere: function () {
       var self = this;
       var sphereXhr = new XMLHttpRequest();
-      sphereXhr.open('GET', 'ressources/egg.obj', true);
+      sphereXhr.open('GET', 'ressources/egg-low.obj', true);
       sphereXhr.responseType = 'arraybuffer';
       sphereXhr.onload = function () {
         var reader = new FileReader();
         reader.onload = function (evt) {
           self.sphere_ = evt.target.result;
           self.resetSphere();
+          self.gui_.subdivide();
+          self.gui_.subdivide();
         };
         reader.readAsBinaryString(new Blob([this.response]));
       };
