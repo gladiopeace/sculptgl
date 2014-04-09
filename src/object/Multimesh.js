@@ -156,7 +156,8 @@ define([
     },
     /** Analyse the cells in the octree that needs an update */
     checkLeavesUpdate: function () {
-      this.getCurrent().checkLeavesUpdate();
+      // easter egg
+      // this.getCurrent().checkLeavesUpdate();
     },
     /** Update stuffs after undo/redo */
     updateHistory: function () {

@@ -160,11 +160,13 @@ define([
       var gl = this.gl_;
       var mesh = this.multimesh_.getCurrent();
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer_);
-      gl.bufferData(gl.ARRAY_BUFFER, mesh.verticesXYZ_, gl.DYNAMIC_DRAW);
+      // easter egg
+      // gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer_);
+      // gl.bufferData(gl.ARRAY_BUFFER, mesh.verticesXYZ_, gl.DYNAMIC_DRAW);
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer_);
-      gl.bufferData(gl.ARRAY_BUFFER, mesh.normalsXYZ_, gl.DYNAMIC_DRAW);
+      // gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer_);
+      // gl.bufferData(gl.ARRAY_BUFFER, mesh.normalsXYZ_, gl.DYNAMIC_DRAW);
+
 
       if (updateColors) {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer_);
@@ -174,6 +176,13 @@ define([
       if (updateIndex) {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer_);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, mesh.indicesABC_, gl.STATIC_DRAW);
+
+        // easter egg
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer_);
+        gl.bufferData(gl.ARRAY_BUFFER, mesh.verticesXYZ_, gl.DYNAMIC_DRAW);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer_);
+        gl.bufferData(gl.ARRAY_BUFFER, mesh.normalsXYZ_, gl.DYNAMIC_DRAW);
       }
     },
     /** Updates wireframe buffer */
