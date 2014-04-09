@@ -220,7 +220,8 @@ define([
         }
       }
 
-      this.multimesh_.updateMesh(mesh.getTrianglesFromVertices(iVertsSelected), iVertsSelected);
+      //easter egg
+      //this.multimesh_.updateMesh(mesh.getTrianglesFromVertices(iVertsSelected), iVertsSelected);
     },
     /** Brush stroke, move vertices along a direction computed by their averaging normals */
     brush: function (center, iVertsInRadius, iVertsFront, radiusSquared, intensity) {

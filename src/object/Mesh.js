@@ -83,8 +83,7 @@ define([
     updateGeometry: function (iTris, iVerts) {
       this.updateTrianglesAabbAndNormal(iTris);
       this.updateVerticesNormal(iVerts);
-      if(iTris === undefined) // easter egg
-        this.updateOctree(iTris);
+      this.updateOctree(iTris);
     },
     /** Return all the triangles linked to a group of vertices */
     getTrianglesFromVertices: function (iVerts) {

@@ -157,7 +157,7 @@ define([
       this.rot_ = quat.create();
       this.center_ = [0.0, 0.0, 0.0];
       this.zoom_ = 0.0;
-      this.zoom(-0.6);
+      this.zoom(-0.8);
     },
     /** Reset view front */
     resetViewFront: function () {
