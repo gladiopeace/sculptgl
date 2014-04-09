@@ -154,6 +154,9 @@ define([
         gl.clearColor(0.2, 0.2, 0.2, 1);
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LEQUAL);
+        //easter egg
+        gl.cullFace(gl.BACK);
+        gl.enable(gl.CULL_FACE);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       }
