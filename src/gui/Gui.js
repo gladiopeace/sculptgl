@@ -243,8 +243,9 @@ define([
           var intVal = parseInt(value.slice(1), 16);
           main.sculpt_.color_ = [(intVal >> 16), (intVal >> 8 & 0xff), (intVal & 0xff)];
         } else // fuck it
-          main.sculpt_.color_ = [168, 66, 66];
+          main.sculpt_.color_ = [255, 192, 0];
       });
+      console.log(main.sculpt_.color_);
       // this.ctrlColor_.__li.hidden = true;
       foldMesh.open();
       foldMesh.__ul.hidden = true;

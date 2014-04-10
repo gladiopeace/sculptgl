@@ -22,7 +22,7 @@ define([
     this.negative_ = false; //opposition deformation
     this.clay_ = true; //clay sculpting (modifier for brush tool)
     this.culling_ = false; //if we backface cull the vertices
-    this.color_ = [168.0, 66.0, 66.0]; //color painting
+    this.color_ = [255.0, 192.0, 0.0]; //color painting
 
     //rotate stuffs
     this.rotateData_ = {
