@@ -25,7 +25,7 @@ void main()
   vec3 vecR = normalize(2.0 * dotLN * normal - vecLight);
   float dotRVpow = pow(dot(vecR, vecLight), shininess);
   vec3 ambiant = fragColor * 0.5;
-  vec3 diffuse = fragColor * 0.3 * max(0.0, dotLN);
+  vec3 diffuse = fragColor * 0.5 * max(0.0, dotLN);
   vec3 specular = fragColor * 0.1 * max(0.0, dotRVpow);
   fragColor = ambiant + diffuse + specular;
   vec3 vecDistance = vVertex - centerPicking;
