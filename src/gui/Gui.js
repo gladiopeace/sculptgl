@@ -245,7 +245,6 @@ define([
         } else // fuck it
           main.sculpt_.color_ = [255, 192, 0];
       });
-      console.log(main.sculpt_.color_);
       // this.ctrlColor_.__li.hidden = true;
       foldMesh.open();
       foldMesh.__ul.hidden = true;
