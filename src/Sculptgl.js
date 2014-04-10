@@ -223,7 +223,6 @@ define([
           self.sphere_ = evt.target.result;
           self.resetSphere();
           self.gui_.subdivide();
-          self.gui_.subdivide();
         };
         reader.readAsBinaryString(new Blob([this.response]));
       };
