@@ -215,14 +215,17 @@ define([
     loadSphere: function () {
       var self = this;
       var sphereXhr = new XMLHttpRequest();
-      sphereXhr.open('GET', 'ressources/egg-low.obj', true);
+      sphereXhr.open('GET', 'ressources/egg.obj', true);
       sphereXhr.responseType = 'arraybuffer';
       sphereXhr.onload = function () {
         var reader = new FileReader();
         reader.onload = function (evt) {
           self.sphere_ = evt.target.result;
           self.resetSphere();
+          console.log('Triangles before subdivision', self.multimesh_.getCurrent().getNbTriangles());
           self.gui_.subdivide();
+          self.gui_.subdivide();
+          console.log('Triangles after subdivision', self.multimesh_.getCurrent().getNbTriangles());
         };
         reader.readAsBinaryString(new Blob([this.response]));
       };
