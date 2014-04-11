@@ -1,6 +1,7 @@
 define([
+  'lib/jQuery',
   'misc/Utils'
-], function (Utils) {
+], function ($, Utils) {
 
   'use strict';
 
@@ -246,6 +247,10 @@ define([
             'title': ''
           };
           window.Sketchfab.showUploader(options);
+          // Prevent shortcut keys from triggering in Sketchfab export
+          $('.skfb-uploader').on('keydown', function (e) {
+            e.stopPropagation();
+          });
         });
       }, function ( /*currentIndex, totalIndex*/ ) {});
     }, function ( /*error*/ ) {});

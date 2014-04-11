@@ -312,11 +312,6 @@ define([
       if (!this.sculptgl_.mesh_)
         return;
       Export.exportSketchfab(this.sculptgl_.mesh_);
-
-      // Prevent shortcut keys from triggering in Sketchfab export
-      $('.skfb-uploader').on('keydown', function (e) {
-        e.stopPropagation();
-      });
     },
     /** Subdivide the mesh */
     subdivide: function () {
