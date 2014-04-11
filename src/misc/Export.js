@@ -227,6 +227,15 @@ define([
     // zip.file('model.obj', data);
     // zip.file('specular.mtl', mtl);
 
+    var verts = mesh.verticesXYZ_;
+    var tempRot = new Float32Array(verts.length);
+    for (var i = 0, l = verts.length / 3; i < l; ++i) {
+      var j = i * 3;
+      tempRot[j] = verts[j];
+      tempRot[j + 1] = -verts[j + 2];
+      tempRot[j + 2] = verts[j + 1];
+    }
+    mesh.verticesXYZ_ = tempRot;
     var blob = Export.exportBinaryPLY(mesh);
     var options = {
       'fileModel': blob,
@@ -235,6 +244,7 @@ define([
     };
 
     window.Sketchfab.showUploader(options);
+    mesh.verticesXYZ_ = verts;
   };
 
   return Export;
