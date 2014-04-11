@@ -297,7 +297,7 @@ define([
     saveFileAsPLY: function () {
       if (!this.sculptgl_.mesh_)
         return;
-      var blob = Export.exportPLY(this.sculptgl_.mesh_);
+      var blob = Export.exportBinaryPLY(this.sculptgl_.mesh_);
       saveAs(blob, 'yourMesh.ply');
     },
     /** Save file as STL */

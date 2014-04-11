@@ -220,12 +220,7 @@ define([
 
   /** Export OBJ file to Sketchfab */
   Export.exportSketchfab = function (mesh) {
-    // create a zip containing the .obj model
-    // var data = Export.exportOBJ(mesh, 'specular');
-    // var mtl = Export.exportSpecularMtl();
-    // var zip = new window.JSZip();
-    // zip.file('model.obj', data);
-    // zip.file('specular.mtl', mtl);
+    // var blob = Export.exportOBJ(mesh, 'specular');
 
     var verts = mesh.verticesXYZ_;
     var tempRot = new Float32Array(verts.length);
@@ -237,14 +232,23 @@ define([
     }
     mesh.verticesXYZ_ = tempRot;
     var blob = Export.exportBinaryPLY(mesh);
-    var options = {
-      'fileModel': blob,
-      'filenameModel': 'model.ply',
-      'title': ''
-    };
-
-    window.Sketchfab.showUploader(options);
     mesh.verticesXYZ_ = verts;
+
+    var zip = window.zip;
+    zip.useWebWorkers = true;
+    zip.workerScriptsPath = 'lib/';
+    zip.createWriter(new zip.BlobWriter('application/zip'), function (writer) {
+      writer.add('easteregg.ply', new zip.BlobReader(blob), function () {
+        writer.close(function (compressed) {
+          var options = {
+            'fileModel': compressed,
+            'filenameModel': 'easteregg.zip',
+            'title': ''
+          };
+          window.Sketchfab.showUploader(options);
+        });
+      }, function ( /*currentIndex, totalIndex*/ ) {});
+    }, function ( /*error*/ ) {});
   };
 
   return Export;
