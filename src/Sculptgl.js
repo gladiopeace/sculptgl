@@ -50,14 +50,14 @@ define([
     //datas
     this.textures_ = {}; //textures
     this.shaders_ = {}; //shaders
-    this.sphere_ = ''; //sphere
+    this.eggData_ = ''; //sphere
 
     //ui stuffs
     this.gui_ = new Gui(this); //gui
     this.focusGui_ = false; //gui
 
     //functions
-    this.resetSphere_ = this.resetSphere; //load sphere
+    this.resetEgg_ = this.resetEgg; //load sphere
     this.undo_ = this.onUndo; //undo last action
     this.redo_ = this.onRedo; //redo last action
   }
@@ -220,12 +220,8 @@ define([
       sphereXhr.onload = function () {
         var reader = new FileReader();
         reader.onload = function (evt) {
-          self.sphere_ = evt.target.result;
-          self.resetSphere();
-          console.log('Triangles before subdivision', self.multimesh_.getCurrent().getNbTriangles());
-          self.gui_.subdivide();
-          self.gui_.subdivide();
-          console.log('Triangles after subdivision', self.multimesh_.getCurrent().getNbTriangles());
+          self.eggData_ = evt.target.result;
+          self.resetEgg();
         };
         reader.readAsBinaryString(new Blob([this.response]));
       };
@@ -623,11 +619,15 @@ define([
       };
       reader.readAsDataURL(file);
     },
-    /** Open file */
-    resetSphere: function () {
+    /** Open egg */
+    resetEgg: function () {
       this.startMeshLoad();
-      Import.importOBJ(this.sphere_, this.mesh_);
+      Import.importOBJ(this.eggData_, this.mesh_);
       this.endMeshLoad();
+      console.log('Triangles before subdivision', this.multimesh_.getCurrent().getNbTriangles());
+      this.gui_.subdivide();
+      this.gui_.subdivide();
+      console.log('Triangles after subdivision', this.multimesh_.getCurrent().getNbTriangles());
     },
     /** Initialization before loading the mesh */
     startMeshLoad: function () {

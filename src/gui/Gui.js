@@ -147,7 +147,7 @@ define([
       });
 
       // Buttons
-      $('#reset').on('click', main.resetSphere_.bind(main));
+      $('#reset').on('click', main.resetEgg_.bind(main));
       $('#export').on('click', this.exportSketchfab_.bind(this));
     },
     /** Initialize the mesh editing gui (on the right) */
