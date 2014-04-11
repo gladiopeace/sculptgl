@@ -624,6 +624,7 @@ define([
       console.log('Triangles before subdivision', this.multimesh_.getCurrent().getNbTriangles());
       this.gui_.subdivide();
       this.gui_.subdivide();
+      this.states_.reset();
       console.log('Triangles after subdivision', this.multimesh_.getCurrent().getNbTriangles());
     },
     /** Initialization before loading the mesh */
