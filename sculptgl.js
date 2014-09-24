@@ -562,10 +562,12 @@ SculptGL.prototype = {
         } else
           this.sculpt_.sculptStroke( mouseX, mouseY, pressureRadius, pressureIntensity, this );
       }
-    } else if ( button === 3 ) {
-      if ( this.camera_.usePivot_ )
-        this.picking_.intersectionMouseMesh( this.mesh_, mouseX, mouseY, pressureRadius );
-      this.camera_.start( mouseX, mouseY, this.picking_ );
+    }
+    if (button === 3 || (button === 1 && this.picking_.mesh_ === null) || (event.altKey && button !== 0)) {
+      this.mouseButton_ = 3;
+      if (this.camera_.usePivot_)
+        this.picking_.intersectionMouseMesh(this.mesh_, mouseX, mouseY, pressureRadius);
+      this.camera_.start(mouseX, mouseY, this.picking_);
     }
   },
 
