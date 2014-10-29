@@ -200,7 +200,7 @@ define([], function () {
         t6 = (loose[5] - vz) * irz;
       var tmin = Math.max(Math.max(Math.min(t1, t2), Math.min(t3, t4)), Math.min(t5, t6));
       var tmax = Math.min(Math.min(Math.max(t1, t2), Math.max(t3, t4)), Math.max(t5, t6));
-      if (tmax < 0 || tmin >= tmax) // no intersection
+      if (tmax < 0 || tmin > tmax) // no intersection
         return [];
       if (this.children_.length === 8) {
         var iTriangles = [];
