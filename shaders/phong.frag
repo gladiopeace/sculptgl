@@ -23,7 +23,7 @@ void main()
   }
   float dotLN = dot(normal, vecLight);
   vec3 vecR = normalize(2.0 * dotLN * normal - vecLight);
-  float dotRVpow = pow(dot(vecR, vecLight), shininess);
+  float dotRVpow = pow(clamp(dot(vecR, vecLight), 0.0, 1.0), shininess);
   vec3 ambiant = fragColor * 0.5;
   vec3 diffuse = fragColor * 0.5 * max(0.0, dotLN);
   vec3 specular = fragColor * 0.1 * max(0.0, dotRVpow);
