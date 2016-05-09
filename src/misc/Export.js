@@ -211,74 +211,6 @@ define([
     return new Blob([data]);
   };
 
-  Export.exportBinaryPLYSketchfab = function (mesh) {
-    var vAr = mesh.verticesXYZ_;
-    var cAr = mesh.colorsRGB_;
-    var iAr = mesh.indicesABC_;
-    var nbVertices = mesh.getNbVertices();
-    var nbTriangles = mesh.getNbTriangles();
-    var endian = Utils.littleEndian ? 'little' : 'big';
-    var header = 'ply\nformat binary_' + endian + '_endian 1.0\ncomment created by SculptGL\n';
-    header += 'element vertex ' + nbVertices + '\n';
-    header += 'property float x\nproperty float y\nproperty float z\n';
-    header += 'property float red\nproperty float green\nproperty float blue\n';
-    header += 'element face ' + nbTriangles + '\n';
-    header += 'property list uchar uint vertex_indices\nend_header\n';
-
-    var i = 0;
-    var j = 0;
-    var k = 0;
-    var inc = 0;
-
-    var headerSize = header.length;
-    var vertSize = vAr.length * 4 + cAr.length * 4;
-    var indexSize = iAr.length * 4 + nbTriangles;
-    var totalSize = headerSize + vertSize + indexSize;
-    var data = new Uint8Array(totalSize);
-
-    j = header.length;
-    for (i = 0; i < j; ++i) {
-      data[i] = header.charCodeAt(i);
-    }
-
-    var verBuffer = new Uint8Array(vAr.buffer);
-
-    var colorLinear = new Float32Array(cAr);
-    var clen = colorLinear.length;
-    for (i = 0; i < clen; ++i) {
-      var x = colorLinear[i];
-      // srgb to linear
-      colorLinear[i] = x < 0.04045 ? x * (1.0 / 12.92) : Math.pow((x + 0.055) * (1.0 / 1.055), 2.4);
-      colorLinear[i] *= 255.0; // bypass skfb bug
-    }
-
-    var carBuffer = new Uint8Array(colorLinear.buffer);
-    var offset = headerSize;
-    for (i = 0; i < nbVertices; ++i) {
-      j = i * 12;
-      k = offset + j * 2;
-      for (inc = 0; inc < 12; ++inc) {
-        data[k++] = verBuffer[j + inc];
-      }
-
-      for (inc = 0; inc < 12; ++inc) {
-        data[k++] = carBuffer[j + inc]; // bypass sketchfab bug
-      }
-    }
-
-    var bufIndex = new Uint8Array(iAr.buffer);
-    offset += vertSize;
-    for (i = 0; i < nbTriangles; ++i) {
-      j = i * 12;
-      k = offset + i * 13;
-      data[k] = 3;
-      for (inc = 0; inc < 12; ++inc) {
-        data[++k] = bufIndex[j++];
-      }
-    }
-    return new Blob([data]);
-  };
-
   Export.exportSpecularMtl = function () {
     var data = 'newmtl specular\n';
     data += 'Ks 1.0 1.0 1.0\n';
@@ -300,7 +232,7 @@ define([
       tempRot[j + 2] = verts[j + 1];
     }
     mesh.verticesXYZ_ = tempRot;
-    var blob = Export.exportBinaryPLYSketchfab(mesh);
+    var blob = Export.exportBinaryPLY(mesh);
     mesh.verticesXYZ_ = verts;
 
     var zip = window.zip;
