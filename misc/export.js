@@ -121,25 +121,25 @@ Export.exportSpecularMtl = function ()
 };
 
 /** Export OBJ file to Sketchfab */
-Export.exportSketchfab = function (mesh)
-{
-  // create a zip containing the .obj model
-  var model = Export.exportOBJ(mesh, 'specular');
-  var mtl = Export.exportSpecularMtl();
-  var zip = new JSZip();
-  zip.file('model.obj', model);
-  zip.file('specular.mtl', mtl);
-  var blob = zip.generate(
-  {
-    type: 'blob',
-    compression: 'DEFLATE'
-  });
+Export.exportSketchfab = function (mesh) {
 
-  var options = {
-    'fileModel': blob,
-    'filenameModel': 'model.zip',
-    'title': ''
-  };
+    // create a zip containing the .obj model
+    var model = Export.exportOBJ(mesh, 'specular');
+    var mtl = Export.exportSpecularMtl();
+    var zip = new JSZip();
+    zip.file('model.obj', model);
+    zip.file('specular.mtl', mtl);
+    var blob = zip.generate({
+        type: 'blob',
+        compression: 'DEFLATE'
+    });
 
-  Sketchfab.showUploader(options);
+    var options = {
+        'modelFile': blob,
+        'filename': 'model.zip',
+        'name': '',
+        'source': 'sculptfab'
+    };
+
+    Sketchfab.showUploader(options);
 };
