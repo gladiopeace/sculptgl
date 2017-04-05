@@ -242,9 +242,10 @@ define([
       writer.add('easteregg.ply', new zip.BlobReader(blob), function () {
         writer.close(function (compressed) {
           var options = {
-            'fileModel': compressed,
-            'filenameModel': 'easteregg.zip',
-            'title': ''
+            'modelFile': compressed,
+            'filename': 'easteregg.zip',
+            'name': '',
+            'source': 'sculptfab'
           };
           window.Sketchfab.showUploader(options);
           // Prevent shortcut keys from triggering in Sketchfab export
