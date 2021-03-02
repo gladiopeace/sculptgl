@@ -633,7 +633,7 @@ SculptGL.prototype = {
 
   /** WebGL context is lost */
   onContextLost: function() {
-    alert( 'shit happens : context lost' );
+    alert( 'error : context lost' );
   },
 
   /** WebGL context is restored */
