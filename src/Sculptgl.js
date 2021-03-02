@@ -554,7 +554,7 @@ define([
     },
     /** WebGL context is lost */
     onContextLost: function () {
-      window.alert('shit happens : context lost');
+      window.alert('error : context lost');
     },
     /** WebGL context is restored */
     onContextRestored: function () {
